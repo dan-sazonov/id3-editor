@@ -8,7 +8,6 @@ colorama.init()
 c_reset = colorama.Style.RESET_ALL
 
 default_data = dict()
-ignored_minimal = {'tracknumber', 'genre'}
 
 
 def set_parser():
@@ -27,7 +26,7 @@ def set_metadata(file, *ignore):
     text = config.LOCALE
     track = EasyID3(file)
     actual_data = set(track.keys())
-    ignored_data = set(ignore)
+    ignored_data = set(*ignore)
 
     # getting data from user and editing the metadata of the current file
     for data in text:
@@ -49,13 +48,17 @@ def set_metadata(file, *ignore):
 
 
 def main():
+    ignored = set()
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
-    print(set_metadata('./drafts/example2.mp3', 'title'))
+
+    if namespace.minimal:
+        # todo минимальный режим
+        ignored = ignored.union({'tracknumber', 'date'})
+
+    print(set_metadata('./drafts/example2.mp3', ignored))
 
 
 if __name__ == "__main__":
     set_parser()
     main()
-
-# print(set_metadata('P:\\id3-editor\\drafts\\example.mp3'))
