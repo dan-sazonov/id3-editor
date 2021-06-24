@@ -19,10 +19,12 @@ def set_parser():
 
     parser.add_argument('-m', '--minimal', action='store_true', default=False,
                         help='set only title, artist, album and genre')
+    parser.add_argument('-c', '--copyright', action='store_true', default=False,
+                        help='leave the "copyright" parameter unchanged')
     return parser
 
 
-def set_metadata(file, *ignore):
+def set_metadata(file, leave_copy=False, *ignore):
     text = config.LOCALE
     track = EasyID3(file)
     actual_data = set(track.keys())
@@ -40,7 +42,8 @@ def set_metadata(file, *ignore):
 
     # deleting unnecessary data. wrong approach, will be fixed
     for data in actual_data:
-        if data not in text or data in ignored_data:
+        if (data == 'copyright' and not leave_copy) or \
+                ((data not in text or data in ignored_data) and not (data == 'copyright' and leave_copy)):
             del track[data]
 
     track.save()
@@ -49,14 +52,17 @@ def set_metadata(file, *ignore):
 
 def main():
     ignored = set()
+    copy = False
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
 
     if namespace.minimal:
-        # todo минимальный режим
         ignored = ignored.union({'tracknumber', 'date'})
+    if namespace.copyright:
+        ignored.add('copyright')
+        copy = True
 
-    print(set_metadata('./drafts/example2.mp3', ignored))
+    print(set_metadata('./drafts/example.mp3', copy, ignored))
 
 
 if __name__ == "__main__":
