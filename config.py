@@ -5,3 +5,12 @@ VERSION = {
 }
 
 AUTHOR = 'Dan Sazonov'
+
+LOCALE = {
+    'title': 'Title',
+    'artist': 'Artist',
+    'album': 'Album',
+    'tracknumber': 'Number of this track',
+    'genre': 'Genre',
+    'date': 'Year of release'
+}
