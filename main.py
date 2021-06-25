@@ -7,7 +7,7 @@ from mutagen.easyid3 import EasyID3
 
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
-json_log = dict()
+usr_log = dict()
 
 
 def set_parser():
@@ -23,13 +23,16 @@ def set_parser():
                         help='leave the "copyright" parameter unchanged')
     parser.add_argument('-l', '--log', action='store_true', default=False,
                         help='create json log with all metadata')
+    parser.add_argument('-p', '--parse', action='store_true', default=False,
+                        help='parse json log and set this metadata')
     return parser
 
 
-def set_metadata(file, leave_copy=False, logging=False, *ignore):
+def ask_user(file, leave_copy=False, *ignore):
     file = file.replace('\\', '/')
     text = config.LOCALE
     track = EasyID3(file)
+    edited_md = dict()
     actual_data = set(track.keys())
     ignored_data = set(*ignore)
     file_title = file.split('/')[-1]
@@ -40,35 +43,44 @@ def set_metadata(file, leave_copy=False, logging=False, *ignore):
         if data in actual_data and data not in ignored_data:
             print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(track[data][0]),
                   end=' ')
-            user_input = input()
-            track[data] = user_input if user_input else track[data][0]
+            usr_input = input()
+            edited_md[data] = [usr_input] if usr_input else [track[data][0]]
+
+    if leave_copy and 'copyright' in actual_data:
+        edited_md['copyright'] = [track['copyright'][0]]
 
     # deleting unnecessary data. wrong approach, will be fixed
-    for data in actual_data:
-        if (data == 'copyright' and not leave_copy) or \
-                ((data not in text or data in ignored_data) and not (data == 'copyright' and leave_copy)):
-            del track[data]
+    # for data in actual_data:
+    #     if (data == 'copyright' and not leave_copy) or \
+    #             ((data not in text or data in ignored_data) and not (data == 'copyright' and leave_copy)):
+    #         del track[data]
 
-    if logging:
-        json_log[file_title] = dict(track)
-    track.save()
-    return track
+    return edited_md
 
 
 def parse_log():
     try:
         with open('log.json', 'r') as read_file:
-            data = json.load(read_file)
+            return json.load(read_file)
     except FileNotFoundError:
-        print(colorama.Fore.RED + 'err: ' + c_reset + 'log.json doesn\'t exist. Try to run this program with [-l] flag.')
+        print(
+            colorama.Fore.RED + 'err: ' + c_reset + 'log.json doesn\'t exist. Try to run this program with [-l] flag.')
         exit(1)
-    print(data)
+
+
+def set_metadata(file, leave_copy=False, logging=True, *ignore):
+    # получаем leave-copy, ignore, logging
+    # словарь с данными - глобальный
+    # проходим по метам файла, редачим
+    # ненужные мета удаляем
+    pass
 
 
 def main():
     ignored = set()
     leave_copy = False
     logging = False
+    log = usr_log
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
 
@@ -79,16 +91,20 @@ def main():
         leave_copy = True
     if namespace.log:
         logging = True
+    if namespace.parse:
+        log = parse_log()
 
-    set_metadata('./drafts/example.mp3', leave_copy, logging, ignored)
-    set_metadata('./drafts/example2.mp3', leave_copy, logging, ignored)
+    if not namespace.parse:
+        file = './drafts/example.mp3'
+        usr_log[file] = ask_user(file, leave_copy, ignored)
 
     if logging:
         with open('log.json', 'w', encoding='utf-8') as write_file:
-            json.dump(json_log, write_file)
+            json.dump(log, write_file)
 
 
 if __name__ == "__main__":
     set_parser()
     main()
     parse_log()
+    print(usr_log)
