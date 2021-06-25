@@ -1,6 +1,7 @@
 import config
 import colorama
 import sys
+import os
 import argparse
 import json
 from mutagen.easyid3 import EasyID3
@@ -8,6 +9,22 @@ from mutagen.easyid3 import EasyID3
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
 usr_log = dict()
+
+
+def select_files():
+    files = []
+    working_dir = input(colorama.Style.BRIGHT + 'Enter the absolute or relative path to directory: ' + c_reset).replace(
+        '\\', '/')
+
+    if not os.path.exists(working_dir):
+        print(
+            colorama.Fore.RED + 'err: ' + c_reset + 'incorrect path. Try again.')
+        exit(1)
+
+    for file in os.listdir(working_dir):
+        if file.split('.')[-1] == 'mp3':
+            files.append(f'{working_dir}/{file}')
+    return files
 
 
 def set_parser():
@@ -76,11 +93,16 @@ def set_metadata(file, leave_copy=False, logging=True, *ignore):
     pass
 
 
+def run_parser():
+    pass
+
+
 def main():
     ignored = set()
     leave_copy = False
     logging = False
     log = usr_log
+    mp3_files = select_files()
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
 
@@ -94,9 +116,12 @@ def main():
     if namespace.parse:
         log = parse_log()
 
-    if not namespace.parse:
-        file = './drafts/example.mp3'
-        usr_log[file] = ask_user(file, leave_copy, ignored)
+    if namespace.parse:
+        run_parser()
+    else:
+        for file in mp3_files:
+            file_title = file.split('/')[-1]
+            usr_log[file_title] = ask_user(file, leave_copy, ignored)
 
     if logging:
         with open('log.json', 'w', encoding='utf-8') as write_file:
@@ -107,4 +132,3 @@ if __name__ == "__main__":
     set_parser()
     main()
     parse_log()
-    print(usr_log)
