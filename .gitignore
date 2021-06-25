@@ -149,6 +149,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-
+# Other
 test.py
 drafts/todo
+log.json
