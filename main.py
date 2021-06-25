@@ -55,6 +55,16 @@ def set_metadata(file, leave_copy=False, logging=False, *ignore):
     return track
 
 
+def parse_log():
+    try:
+        with open('log.json', 'r') as read_file:
+            data = json.load(read_file)
+    except FileNotFoundError:
+        print(colorama.Fore.RED + 'err: ' + c_reset + 'log.json doesn\'t exist. Try to run this program with [-l] flag.')
+        exit(1)
+    print(data)
+
+
 def main():
     ignored = set()
     leave_copy = False
@@ -81,3 +91,4 @@ def main():
 if __name__ == "__main__":
     set_parser()
     main()
+    parse_log()
