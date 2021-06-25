@@ -25,16 +25,19 @@ def set_parser():
 
 
 def set_metadata(file, leave_copy=False, *ignore):
+    file = file.replace('\\', '/')
     text = config.LOCALE
     track = EasyID3(file)
     actual_data = set(track.keys())
     ignored_data = set(*ignore)
+    file_title = file.split('/')[-1]
+    print('\n' + colorama.Fore.GREEN + file_title +  c_reset)
 
     # getting data from user and editing the metadata of the current file
     for data in text:
         if data in actual_data and data not in ignored_data:
-            print(colorama.Style.BRIGHT + text[data] + c_reset, end=' ')
-            print(colorama.Style.DIM + '({0}): '.format(track[data][0]), end=' ')
+            print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(track[data][0]),
+                  end=' ')
             user_input = input()
             track[data] = user_input if user_input else track[data][0]
 
@@ -62,7 +65,8 @@ def main():
         ignored.add('copyright')
         copy = True
 
-    print(set_metadata('./drafts/example.mp3', copy, ignored))
+    set_metadata('./drafts/example.mp3', copy, ignored)
+    set_metadata('./drafts/example.mp3', copy, ignored)
 
 
 if __name__ == "__main__":
