@@ -13,8 +13,8 @@ usr_log = dict()
 
 def select_files():
     files = []
-    working_dir = input(colorama.Style.BRIGHT + 'Enter the absolute or relative path to directory: ' + c_reset).replace(
-        '\\', '/')
+    print(colorama.Style.BRIGHT + 'Enter the absolute or relative path to directory: ' + c_reset, end='')
+    working_dir = input().replace('\\', '/')
 
     if not os.path.exists(working_dir):
         print(
