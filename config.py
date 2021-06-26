@@ -14,3 +14,5 @@ LOCALE = {
     'genre': 'Genre',
     'date': 'Year of release'
 }
+
+LOG_PATH = './log.json'

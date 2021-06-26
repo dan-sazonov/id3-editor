@@ -74,7 +74,7 @@ def ask_user(file, leave_copy=False, *ignore):
 
 def parse_log():
     try:
-        with open('log.json', 'r') as read_file:
+        with open(config.LOG_PATH, 'r') as read_file:
             return json.load(read_file)
     except FileNotFoundError:
         print(
@@ -123,7 +123,7 @@ def main():
     set_metadata(log, path)
 
     if logging:
-        with open('log.json', 'w', encoding='utf-8') as write_file:
+        with open(config.LOG_PATH, 'w', encoding='utf-8') as write_file:
             json.dump(log, write_file)
 
 
