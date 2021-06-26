@@ -57,15 +57,18 @@ def ask_user(file, leave_copy=False, *ignore):
 
     # getting data from user and editing the metadata of the current file
     for data in text:
-        if data in actual_data and data not in ignored_data:
-            print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(track[data][0]),
+        if data not in ignored_data:
+            try:
+                tmp = track[data][0]
+            except KeyError:
+                tmp = ''
+            print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp),
                   end=' ')
             usr_input = input()
             edited_md[data] = [usr_input] if usr_input else [track[data][0]]
 
     if leave_copy and 'copyright' in actual_data:
         edited_md['copyright'] = [track['copyright'][0]]
-
     return edited_md
 
 
@@ -85,11 +88,12 @@ def set_metadata(files, path):
         track = EasyID3(current_path)
         actual_data = files[file].keys()
 
-        for data in track:
-            if data in actual_data:
-                track[data] = files[file][data]
-            else:
-                track[data] = u''
+        for data in files[file]:
+            track[data] = files[file][data]
+        for del_data in track:
+            if del_data not in actual_data:
+                del track[del_data]
+
         track.save()
 
 
