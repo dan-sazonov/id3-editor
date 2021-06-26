@@ -24,7 +24,7 @@ def select_files():
     for file in os.listdir(working_dir):
         if file.split('.')[-1] == 'mp3':
             files.append(f'{working_dir}/{file}')
-    return files
+    return files, working_dir
 
 
 def set_parser():
@@ -66,12 +66,6 @@ def ask_user(file, leave_copy=False, *ignore):
     if leave_copy and 'copyright' in actual_data:
         edited_md['copyright'] = [track['copyright'][0]]
 
-    # deleting unnecessary data. wrong approach, will be fixed
-    # for data in actual_data:
-    #     if (data == 'copyright' and not leave_copy) or \
-    #             ((data not in text or data in ignored_data) and not (data == 'copyright' and leave_copy)):
-    #         del track[data]
-
     return edited_md
 
 
@@ -85,12 +79,18 @@ def parse_log():
         exit(1)
 
 
-def set_metadata(file, leave_copy=False, logging=True, *ignore):
-    # получаем leave-copy, ignore, logging
-    # словарь с данными - глобальный
-    # проходим по метам файла, редачим
-    # ненужные мета удаляем
-    pass
+def set_metadata(files, path):
+    for file in files:
+        current_path = os.path.join(path, file)
+        track = EasyID3(current_path)
+        actual_data = files[file].keys()
+
+        for data in track:
+            if data in actual_data:
+                track[data] = files[file][data]
+            else:
+                track[data] = u''
+        track.save()
 
 
 def run_parser():
@@ -102,7 +102,7 @@ def main():
     leave_copy = False
     logging = False
     log = usr_log
-    mp3_files = select_files()
+    mp3_files, path = select_files()
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
 
@@ -121,7 +121,8 @@ def main():
     else:
         for file in mp3_files:
             file_title = file.split('/')[-1]
-            usr_log[file_title] = ask_user(file, leave_copy, ignored)
+            log[file_title] = ask_user(file, leave_copy, ignored)
+        set_metadata(log, path)
 
     if logging:
         with open('log.json', 'w', encoding='utf-8') as write_file:
