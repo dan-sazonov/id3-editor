@@ -93,10 +93,6 @@ def set_metadata(files, path):
         track.save()
 
 
-def run_parser():
-    pass
-
-
 def main():
     ignored = set()
     leave_copy = False
@@ -115,14 +111,12 @@ def main():
         logging = True
     if namespace.parse:
         log = parse_log()
-
-    if namespace.parse:
-        run_parser()
     else:
         for file in mp3_files:
             file_title = file.split('/')[-1]
             log[file_title] = ask_user(file, leave_copy, ignored)
-        set_metadata(log, path)
+
+    set_metadata(log, path)
 
     if logging:
         with open('log.json', 'w', encoding='utf-8') as write_file:
