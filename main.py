@@ -8,7 +8,7 @@ from mutagen.easyid3 import EasyID3
 
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
-usr_log = dict()
+usr_log = dict() # нафиг не нужен, отрефакторить в main присваиваивания, отсюда выпилить
 
 
 def select_files():
@@ -46,6 +46,7 @@ def set_parser():
 
 
 def ask_user(file, leave_copy=False, *ignore):
+    # чето много всего. подумать, без чего можно обойтись
     file = file.replace('\\', '/')
     text = config.LOCALE
     track = EasyID3(file)
@@ -65,7 +66,7 @@ def ask_user(file, leave_copy=False, *ignore):
             print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp),
                   end=' ')
             usr_input = input()
-            edited_md[data] = [usr_input] if usr_input else [track[data][0]]
+            edited_md[data] = [usr_input] if usr_input else [tmp]
 
     if leave_copy and 'copyright' in actual_data:
         edited_md['copyright'] = [track['copyright'][0]]
