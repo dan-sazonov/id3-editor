@@ -100,12 +100,6 @@ def set_metadata(files, path):
 def main():
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
-    try:
-        if namespace.help:
-            return
-    except AttributeError:
-        pass
-
     ignored = set()
     leave_copy = False
     logging = False
