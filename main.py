@@ -8,7 +8,6 @@ from mutagen.easyid3 import EasyID3
 
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
-usr_log = dict()  # нафиг не нужен, отрефакторить в main присваиваивания, отсюда выпилить
 
 
 def select_files():
@@ -17,8 +16,7 @@ def select_files():
     working_dir = input().replace('\\', '/')
 
     if not os.path.exists(working_dir):
-        print(
-            colorama.Fore.RED + 'err: ' + c_reset + 'incorrect path. Try again.')
+        print(colorama.Fore.RED + 'err: ' + c_reset + 'incorrect path. Try again.')
         exit(1)
 
     for file in os.listdir(working_dir):
@@ -47,12 +45,12 @@ def set_parser():
 
 def ask_user(file, leave_copy=False, *ignore):
     file = file.replace('\\', '/')
+    file_title = file.split('/')[-1]
     text = config.LOCALE
     track = EasyID3(file)
     edited_md = dict()
     actual_data = set(track.keys())
     ignored_data = set(*ignore)
-    file_title = file.split('/')[-1]
     print('\n' + colorama.Fore.GREEN + file_title + c_reset)
 
     # getting data from user and editing the metadata of the current file
@@ -108,7 +106,7 @@ def main():
     ignored = set()
     leave_copy = False
     logging = False
-    log = usr_log
+    log = dict()
     mp3_files, path = select_files()
 
     if namespace.minimal:
@@ -131,8 +129,10 @@ def main():
         with open(config.LOG_PATH, 'w', encoding='utf-8') as write_file:
             json.dump(log, write_file)
 
+    print(colorama.Fore.GREEN + '\nDone! Press [Enter] to exit')
+    input()
+
 
 if __name__ == "__main__":
     set_parser()
     main()
-    parse_log()
