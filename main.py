@@ -8,7 +8,7 @@ from mutagen.easyid3 import EasyID3
 
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
-usr_log = dict() # нафиг не нужен, отрефакторить в main присваиваивания, отсюда выпилить
+usr_log = dict()  # нафиг не нужен, отрефакторить в main присваиваивания, отсюда выпилить
 
 
 def select_files():
@@ -46,7 +46,6 @@ def set_parser():
 
 
 def ask_user(file, leave_copy=False, *ignore):
-    # чето много всего. подумать, без чего можно обойтись
     file = file.replace('\\', '/')
     text = config.LOCALE
     track = EasyID3(file)
@@ -58,18 +57,23 @@ def ask_user(file, leave_copy=False, *ignore):
 
     # getting data from user and editing the metadata of the current file
     for data in text:
-        if data not in ignored_data:
-            try:
-                tmp = track[data][0]
-            except KeyError:
-                tmp = ''
-            print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp),
-                  end=' ')
-            usr_input = input()
-            edited_md[data] = [usr_input] if usr_input else [tmp]
+        if data in ignored_data:
+            continue
+        try:
+            tmp = track[data][0]
+        except KeyError:
+            tmp = ''
+        print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp),
+              end=' ')
+        usr_input = input()
+        edited_md[data] = [usr_input] if usr_input else [tmp]
 
-    if leave_copy and 'copyright' in actual_data:
-        edited_md['copyright'] = [track['copyright'][0]]
+    # leave information about the copyright holder
+    if leave_copy:
+        for data in config.COPYRIGHT:
+            if data in actual_data:
+                edited_md[data] = track[data][0]
+
     return edited_md
 
 
@@ -110,7 +114,7 @@ def main():
     if namespace.minimal:
         ignored = ignored.union({'tracknumber', 'date'})
     if namespace.copyright:
-        ignored.add('copyright')
+        ignored.update(config.COPYRIGHT)
         leave_copy = True
     if namespace.log:
         logging = True
