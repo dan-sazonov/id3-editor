@@ -11,6 +11,11 @@ c_reset = colorama.Style.RESET_ALL
 
 
 def select_files():
+    """
+    Select files that need to be edited
+
+    :returns: files - list of files that need to be edited; working_dir - directory where these files are placed
+    """
     files = []
     print(colorama.Style.BRIGHT + 'Enter the absolute or relative path to directory: ' + c_reset, end='')
     working_dir = input().replace('\\', '/')
@@ -26,6 +31,11 @@ def select_files():
 
 
 def set_parser():
+    """
+    Set and configure the CLI argument parser
+
+    :return: parser
+    """
     parser = argparse.ArgumentParser(
         prog='id3-editor',
         description='''The simplest console tool for batch editing of mp3 metadata''',
@@ -56,13 +66,21 @@ def set_parser():
 
 
 def ask_user(file, default, ignore, leave_copy=False):
+    """
+    Ask the user for new metadata values
+
+    :param file: the file to edit, str
+    :param default: predefined metadata values, dict
+    :param ignore: other metadata values to leave unchanged, dict
+    :param leave_copy: True, if you need to leave copyright information, bool
+    :return: dict with pairs 'metadata': 'value'
+    """
     file = file.replace('\\', '/')
     file_title = file.split('/')[-1]
     text = config.LOCALE
     track = EasyID3(file)
     edited_md = dict()
     actual_data = set(track.keys())
-    ignored_data = set(ignore)
     print('\n' + colorama.Fore.GREEN + file_title + c_reset)
 
     # getting data from user and editing the metadata of the current file
@@ -70,7 +88,7 @@ def ask_user(file, default, ignore, leave_copy=False):
         if data in default:
             edited_md[data] = [default[data]]
 
-        if data in ignored_data:
+        if data in ignore:
             continue
         try:
             tmp = track[data][0]
@@ -91,6 +109,17 @@ def ask_user(file, default, ignore, leave_copy=False):
 
 
 def set_defaults(title, artist, album, number, genre, date):
+    """
+    Ask the user for the values that need to be set for all files
+
+    :param title: True, if you need to leave the title
+    :param artist: True, if you need to leave the artist
+    :param album: True, if you need to leave the album
+    :param number: True, if you need to leave the number
+    :param genre: True, if you need to leave the genre
+    :param date: True, if you need to leave the date
+    :return: default - dict with pairs 'metadata': 'predefined value'; ignored - set with data that should be ignored in ask_user
+    """
     default = dict()
     ignored = set()
     args = {'title': title,
@@ -110,6 +139,11 @@ def set_defaults(title, artist, album, number, genre, date):
 
 
 def parse_log():
+    """
+    Parse the json file with information about the file metadata
+
+    :return: dict: 'filename' : {'metadata': 'value'}
+    """
     try:
         with open(config.LOG_PATH, 'r') as read_file:
             return json.load(read_file)
@@ -120,6 +154,13 @@ def parse_log():
 
 
 def set_metadata(files, path):
+    """
+    Set, edit or delete the metadata of the selected file
+
+    :param files: dict, information about the metadata of each file
+    :param path: str, the directory where these files are located
+    :return: None
+    """
     for file in files:
         current_path = os.path.join(path, file)
         track = EasyID3(current_path)
@@ -135,6 +176,11 @@ def set_metadata(files, path):
 
 
 def main():
+    """
+    Main process
+
+    :return: None
+    """
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
     log = parse_log() if namespace.parse else dict()
