@@ -137,30 +137,23 @@ def set_metadata(files, path):
 def main():
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
-    leave_copy = False
-    logging = False
-    log = dict()
+    log = parse_log() if namespace.parse else dict()
     mp3_files, path = select_files()
     default, ignored = set_defaults(namespace.title, namespace.artist, namespace.album, namespace.number,
                                     namespace.genre, namespace.date)
 
     if namespace.minimal:
-        ignored = ignored.union({'tracknumber', 'date'})
+        ignored.update({'tracknumber', 'date'})
     if namespace.copyright:
         ignored.update(config.COPYRIGHT)
-        leave_copy = True
-    if namespace.log:
-        logging = True
-    if namespace.parse:
-        log = parse_log()
-    else:
+    if not namespace.parse:
         for file in mp3_files:
             file_title = file.split('/')[-1]
-            log[file_title] = ask_user(file, default, ignored, leave_copy)
+            log[file_title] = ask_user(file, default, ignored, namespace.copyright)
 
     set_metadata(log, path)
 
-    if logging:
+    if namespace.log:
         with open(config.LOG_PATH, 'w', encoding='utf-8') as write_file:
             json.dump(log, write_file)
 
