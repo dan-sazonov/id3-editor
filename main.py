@@ -40,21 +40,36 @@ def set_parser():
                         help='create json log with all metadata')
     parser.add_argument('-p', '--parse', action='store_true', default=False,
                         help='parse json log and set this metadata')
+    parser.add_argument('-T', '--title', action='store_true', default=False,
+                        help='set a title for all tracks')
+    parser.add_argument('-R', '--artist', action='store_true', default=False,
+                        help='set an artist for all tracks')
+    parser.add_argument('-A', '--album', action='store_true', default=False,
+                        help='set an album for all tracks')
+    parser.add_argument('-N', '--number', action='store_true', default=False,
+                        help='set a number for all tracks')
+    parser.add_argument('-G', '--genre', action='store_true', default=False,
+                        help='set a genre for all tracks')
+    parser.add_argument('-D', '--date', action='store_true', default=False,
+                        help='set a date for all tracks')
     return parser
 
 
-def ask_user(file, leave_copy=False, *ignore):
+def ask_user(file, default, ignore, leave_copy=False):
     file = file.replace('\\', '/')
     file_title = file.split('/')[-1]
     text = config.LOCALE
     track = EasyID3(file)
     edited_md = dict()
     actual_data = set(track.keys())
-    ignored_data = set(*ignore)
+    ignored_data = set(ignore)
     print('\n' + colorama.Fore.GREEN + file_title + c_reset)
 
     # getting data from user and editing the metadata of the current file
     for data in text:
+        if data in default:
+            edited_md[data] = [default[data]]
+
         if data in ignored_data:
             continue
         try:
@@ -73,6 +88,25 @@ def ask_user(file, leave_copy=False, *ignore):
                 edited_md[data] = track[data][0]
 
     return edited_md
+
+
+def set_defaults(title, artist, album, number, genre, date):
+    default = dict()
+    ignored = set()
+    args = {'title': title,
+            'artist': artist,
+            'album': album,
+            'tracknumber': number,
+            'genre': genre,
+            'date': date}
+
+    for data in args:
+        if args[data]:
+            print(colorama.Style.BRIGHT + 'Set the {0} for all next tracks: '.format(data) + c_reset, end='')
+            default[data] = input()
+            ignored.add(data)
+
+    return default, ignored
 
 
 def parse_log():
@@ -103,11 +137,12 @@ def set_metadata(files, path):
 def main():
     cli_parser = set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
-    ignored = set()
     leave_copy = False
     logging = False
     log = dict()
     mp3_files, path = select_files()
+    default, ignored = set_defaults(namespace.title, namespace.artist, namespace.album, namespace.number,
+                                    namespace.genre, namespace.date)
 
     if namespace.minimal:
         ignored = ignored.union({'tracknumber', 'date'})
@@ -121,7 +156,7 @@ def main():
     else:
         for file in mp3_files:
             file_title = file.split('/')[-1]
-            log[file_title] = ask_user(file, leave_copy, ignored)
+            log[file_title] = ask_user(file, default, ignored, leave_copy)
 
     set_metadata(log, path)
 
