@@ -23,12 +23,12 @@ $ python3 main.py
 ```
 After that, you will be asked to enter the path to directory where the tracks need to be edited. Then change the value of each parameter for each file. If you want to
 apply the value from the brackets, just press [Enter]. It looks like this:
-<p align="center"><img src="./img/demo1.jpg" width="660" height="230"></p>
+<p align="center"><img src="./img/demo1.png" width="660" height="230"></p>
 
 <h3>Default Parameters</h3>
 If there is a same values for each tracks in this folder, you can predefine it by specifying one of the flags when starting the program (see below). The value of this
 parameter will be asked once at start, and will be applied to all tracks. It looks like this:
-<p align="center"><img src="./img/demo2.jpg" width="648" height="346"></p>
+<p align="center"><img src="./img/demo2.png" width="648" height="346"></p>
 <details> 
   <summary><b>Flags:</b></summary>
   <ul>
@@ -48,7 +48,7 @@ If you want you can get a json log with the metadata of the edited files. To do 
 ```json
 {
   "file-name.mp3": {
-    "data": ["value"],
+    "data": ["value"]
   }
 }
  ```
