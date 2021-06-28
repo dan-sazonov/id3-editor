@@ -166,6 +166,10 @@ def set_metadata(files, path):
     """
     for file in files:
         current_path = os.path.join(path, file)
+        # valid the path
+        if not os.path.exists(current_path):
+            print(c_red + 'warn: ' + c_reset + f'{current_path} doesn\'t exist. Try to run again.')
+            continue
         track = EasyID3(current_path)
         actual_data = files[file].keys()
 
