@@ -87,9 +87,11 @@ def ask_user(file, default, ignore, leave_copy=False):
     for data in text:
         if data in default:
             edited_md[data] = [default[data]]
-
         if data in ignore:
+            # skip the iteration if the data in ignored or in default
+            # (if the data in  ignored, then they are in default also)
             continue
+
         try:
             tmp = track[data][0]
         except KeyError:
@@ -166,8 +168,11 @@ def set_metadata(files, path):
         track = EasyID3(current_path)
         actual_data = files[file].keys()
 
+        # set or edit metadata
         for data in files[file]:
             track[data] = files[file][data]
+
+        # delete ignored metadata
         for del_data in track:
             if del_data not in actual_data:
                 del track[del_data]
@@ -194,12 +199,15 @@ def main():
         ignored.update(config.COPYRIGHT)
     if not namespace.parse:
         for file in mp3_files:
+            # ask for information about each file, fill in the log
             file_title = file.split('/')[-1]
             log[file_title] = ask_user(file, default, ignored, namespace.copyright)
 
+    # edit the metadata
     set_metadata(log, path)
 
-    if namespace.log:
+    if namespace.log and not namespace.parse:
+        # create json file and put log into it
         with open(config.LOG_PATH, 'w', encoding='utf-8') as write_file:
             json.dump(log, write_file)
 
