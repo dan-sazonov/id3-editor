@@ -8,6 +8,9 @@ from mutagen.easyid3 import EasyID3
 
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
+c_red = colorama.Fore.RED
+c_green = colorama.Fore.GREEN
+c_bright = colorama.Style.BRIGHT
 
 
 def select_files():
@@ -17,11 +20,11 @@ def select_files():
     :returns: files - list of files that need to be edited; working_dir - directory where these files are placed
     """
     files = []
-    print(colorama.Style.BRIGHT + 'Enter the absolute or relative path to directory: ' + c_reset, end='')
+    print(c_bright + 'Enter the absolute or relative path to directory: ' + c_reset, end='')
     working_dir = input().replace('\\', '/')
 
     if not os.path.exists(working_dir):
-        print(colorama.Fore.RED + 'err: ' + c_reset + 'incorrect path. Try again.')
+        print(c_red + 'err: ' + c_reset + 'incorrect path. Try again.')
         exit(1)
 
     for file in os.listdir(working_dir):
@@ -81,7 +84,7 @@ def ask_user(file, default, ignore, leave_copy=False):
     track = EasyID3(file)
     edited_md = dict()
     actual_data = set(track.keys())
-    print('\n' + colorama.Fore.GREEN + file_title + c_reset)
+    print('\n' + c_green + file_title + c_reset)
 
     # getting data from user and editing the metadata of the current file
     for data in text:
@@ -96,8 +99,7 @@ def ask_user(file, default, ignore, leave_copy=False):
             tmp = track[data][0]
         except KeyError:
             tmp = ''
-        print(colorama.Style.BRIGHT + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp),
-              end=' ')
+        print(c_bright + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp), end='')
         usr_input = input()
         edited_md[data] = [usr_input] if usr_input else [tmp]
 
@@ -133,7 +135,7 @@ def set_defaults(title, artist, album, number, genre, date):
 
     for data in args:
         if args[data]:
-            print(colorama.Style.BRIGHT + 'Set the {0} for all next tracks: '.format(data) + c_reset, end='')
+            print(c_bright + 'Set the {0} for all next tracks: '.format(data) + c_reset, end='')
             default[data] = input()
             ignored.add(data)
 
@@ -150,8 +152,7 @@ def parse_log():
         with open(config.LOG_PATH, 'r') as read_file:
             return json.load(read_file)
     except FileNotFoundError:
-        print(
-            colorama.Fore.RED + 'err: ' + c_reset + 'log.json doesn\'t exist. Try to run this program with [-l] flag.')
+        print(c_red + 'err: ' + c_reset + 'log.json doesn\'t exist. Try to run this program with [-l] flag.')
         exit(1)
 
 
@@ -211,7 +212,7 @@ def main():
         with open(config.LOG_PATH, 'w', encoding='utf-8') as write_file:
             json.dump(log, write_file)
 
-    print(colorama.Fore.GREEN + '\nDone! Press [Enter] to exit')
+    print(c_green + '\nDone! Press [Enter] to exit')
     input()
 
 
