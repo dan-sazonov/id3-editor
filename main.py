@@ -122,7 +122,8 @@ def set_defaults(title, artist, album, number, genre, date):
     :param number: True, if you need to leave the number
     :param genre: True, if you need to leave the genre
     :param date: True, if you need to leave the date
-    :return: default - dict with pairs 'metadata': 'predefined value'; ignored - set with data that should be ignored in ask_user
+    :return: default - dict with pairs 'metadata': 'predefined value'; ignored - set with data that should be ignored in
+     ask_user
     """
     default = dict()
     ignored = set()
