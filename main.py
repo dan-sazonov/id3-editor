@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 import json
+from datetime import datetime
 from mutagen.easyid3 import EasyID3
 
 colorama.init()
@@ -190,6 +191,16 @@ def set_metadata(files, path, clear_all):
         track.save()
 
 
+def create_logs(log):
+    file_name = f"{datetime.today().isoformat('-').replace(':', '-').split('.')[0]}.json"
+    log_path = os.path.join(config.LOG_PATH, file_name)
+    if not os.path.isdir(config.LOG_PATH):
+        os.mkdir(config.LOG_PATH)
+
+    with open(log_path, 'w', encoding='utf-8') as write_file:
+        json.dump(log, write_file)
+
+
 def main():
     """
     Main process
@@ -217,9 +228,7 @@ def main():
     set_metadata(log, path, namespace.delete)
 
     if namespace.log and not namespace.parse:
-        # create json file and put log into it
-        with open(config.LOG_PATH, 'w', encoding='utf-8') as write_file:
-            json.dump(log, write_file)
+        create_logs(log)
 
     print(c_green + '\nDone! Press [Enter] to exit')
     input()

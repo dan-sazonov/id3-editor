@@ -17,7 +17,7 @@ LOCALE = {
 }
 
 # path where the log will be saved
-LOG_PATH = './log.json'
+LOG_PATH = './logs/'
 
 # data to be saved with the -c flag
 COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}

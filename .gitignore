@@ -153,3 +153,4 @@ cython_debug/
 test.py
 drafts/todo
 log.json
+logs/
