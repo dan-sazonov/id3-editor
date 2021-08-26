@@ -53,6 +53,8 @@ def set_parser():
                         help='create json log with all metadata')
     parser.add_argument('-p', '--parse', action='store_true', default=False,
                         help='parse json log and set this metadata')
+    parser.add_argument('-d', '--delete', action='store_true', default=False,
+                        help='delete all metadata from these tracks')
     parser.add_argument('-T', '--title', action='store_true', default=False,
                         help='set a title for all tracks')
     parser.add_argument('-R', '--artist', action='store_true', default=False,
@@ -157,7 +159,7 @@ def parse_log():
         exit(1)
 
 
-def set_metadata(files, path):
+def set_metadata(files, path, clear_all):
     """
     Set, edit or delete the metadata of the selected file
 
@@ -165,6 +167,7 @@ def set_metadata(files, path):
     :param path: str, the directory where these files are located
     :return: None
     """
+
     for file in files:
         current_path = os.path.join(path, file)
         # valid the path
@@ -180,7 +183,7 @@ def set_metadata(files, path):
 
         # delete ignored metadata
         for del_data in track:
-            if del_data not in actual_data:
+            if del_data not in actual_data or clear_all:
                 del track[del_data]
 
         track.save()
@@ -207,10 +210,10 @@ def main():
         for file in mp3_files:
             # ask for information about each file, fill in the log
             file_title = file.split('/')[-1]
-            log[file_title] = ask_user(file, default, ignored, namespace.copyright)
+            log[file_title] = dict() if namespace.delete else ask_user(file, default, ignored, namespace.copyright)
 
     # edit the metadata
-    set_metadata(log, path)
+    set_metadata(log, path, namespace.delete)
 
     if namespace.log and not namespace.parse:
         # create json file and put log into it
