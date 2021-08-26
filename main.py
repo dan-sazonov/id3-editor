@@ -207,6 +207,11 @@ def set_metadata(files, path, clear_all):
 
 
 def create_logs(log):
+    """
+    Create json file and save the log in it
+    :param log: dict, the data to be saved
+    :return: None
+    """
     file_name = f"{datetime.today().isoformat('-').replace(':', '-').split('.')[0]}.json"
     log_path = os.path.join(config.LOG_PATH, file_name)
     if not os.path.isdir(config.LOG_PATH):
