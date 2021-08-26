@@ -152,12 +152,27 @@ def parse_log():
 
     :return: dict: 'filename' : {'metadata': 'value'}
     """
-    try:
-        with open(config.LOG_PATH, 'r') as read_file:
-            return json.load(read_file)
-    except FileNotFoundError:
-        print(c_red + 'err: ' + c_reset + 'log.json doesn\'t exist. Try to run this program with [-l] flag.')
+
+    # find the later log file
+    files = os.listdir(config.LOG_PATH)
+    files = [file for file in files if file.split('.')[-1] == 'json']
+    files = [os.path.join(config.LOG_PATH, file) for file in files]
+    files = [file for file in files if os.path.isfile(file)]
+    log_file = '<default file not found>' if not files else max(files, key=os.path.getctime)
+
+    # ask the path to the log file
+    print(c_bright + 'Enter the absolute or relative path to the log file: ' + c_reset + colorama.Style.DIM +
+          f' ({log_file}): ', end='')
+    usr_input = input()
+    log_file = usr_input if usr_input else log_file
+
+    if not os.path.exists(log_file):
+        print(c_red + 'err: ' + c_reset + 'The log file wasn\'t found. Make sure that the correct path is specified.')
         exit(1)
+
+    # read log
+    with open(log_file, 'r') as read_file:
+        return json.load(read_file)
 
 
 def set_metadata(files, path, clear_all):
