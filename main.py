@@ -17,7 +17,7 @@ def select_files():
     """
     Select files that need to be edited
 
-    :returns: files - list of files that need to be edited; working_dir - directory where these files are placed
+    :returns: list of files that need to be edited; working_dir - directory where these files are placed
     """
     files = []
     print(c_bright + 'Enter the absolute or relative path to directory: ' + c_reset, end='')
@@ -74,10 +74,10 @@ def ask_user(file, default, ignore, leave_copy=False):
     """
     Ask the user for new metadata values
 
-    :param file: the file to edit, str
-    :param default: predefined metadata values, dict
-    :param ignore: other metadata values to leave unchanged, dict
-    :param leave_copy: True, if you need to leave copyright information, bool
+    :param file: str, the file to edit
+    :param default: dict, predefined metadata values
+    :param ignore: dict, other metadata values to leave unchanged
+    :param leave_copy: bool, True, if you need to leave copyright information
     :return: dict with pairs 'metadata': 'value'
     """
     file = file.replace('\\', '/')
@@ -118,14 +118,14 @@ def set_defaults(title, artist, album, number, genre, date):
     """
     Ask the user for the values that need to be set for all files
 
-    :param title: True, if you need to leave the title
-    :param artist: True, if you need to leave the artist
-    :param album: True, if you need to leave the album
-    :param number: True, if you need to leave the number
-    :param genre: True, if you need to leave the genre
-    :param date: True, if you need to leave the date
-    :return: default - dict with pairs 'metadata': 'predefined value'; ignored - set with data that should be ignored in
-     ask_user
+    :param title: bool, True, if you need to leave the title
+    :param artist: bool, True, if you need to leave the artist
+    :param album: bool, True, if you need to leave the album
+    :param number: bool, True, if you need to leave the number
+    :param genre: bool, True, if you need to leave the genre
+    :param date: bool, True, if you need to leave the date
+    :return: default: dict with pairs 'metadata': 'predefined value'
+             ignored: set with data that should be ignored in ask_user
     """
     default = dict()
     ignored = set()
@@ -165,6 +165,7 @@ def set_metadata(files, path, clear_all):
 
     :param files: dict, information about the metadata of each file
     :param path: str, the directory where these files are located
+    :param clear_all: bool, True, if you need to remove all the metadata
     :return: None
     """
 
