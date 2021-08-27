@@ -13,7 +13,7 @@ $ cd id3-editor
 $ python3 -m pip install -r requirements.txt
 ```
 _note: you may need to enter_ `python` _instead of_ `python3`.<br>
-The program was tested on Win10 x64 and Ubuntu 20.04 x64 on Python 3.8.2. I do not know if everything will work fine on other os, and it will be great if you share
+The program was tested on Win10 x64 and Ubuntu 20.04 x64 on Python 3.9.0. I do not know if everything will work fine on other os, and it will be great if you share
 your experience of using it and tell me about the found errors.
 
 ## ⚙ Usage
@@ -52,13 +52,14 @@ If you want you can get a json log with the metadata of the edited files. To do 
   }
 }
  ```
-You can restore metadata based on information from this file. For example, this may be useful if you have the same files in different directories and you need to edit 
-them all. Run the program with the `-p` or `--parse` flag, and enter the path to the required directory. Any others flags will be ignored.
+You can restore metadata based on information from any log file. For example, this may be useful if you have the same files in different directories and you need to edit 
+them all. Run the program with the `-p` or `--parse` flag, set the log file and enter the path to the required directory. Any others flags will be ignored.
 
 <h3>More Features</h3>
 
 - If the file contains information about the copyright holder and you want to leave it, use the `-c` or `--copyright` flag.
 - You can run the program in minimal mode with `-m` or `--minimal` flag. It will only ask for title, artist, album and genre. Other data will be cleared.
+- To remove all data from the tracks, run the program with the `-d` or `--delete` flag. Any other flags will be ignored.
 - To view the quick help, run the program with the `-h` or `--help` flag.
 
 ## 🤝 Contributing
