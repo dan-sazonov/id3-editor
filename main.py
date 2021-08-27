@@ -71,13 +71,13 @@ def set_parser():
     return parser
 
 
-def ask_user(file, default, ignore, leave_copy=False):
+def ask_user(file: str, default: dict, ignore: set, leave_copy=False):
     """
     Ask the user for new metadata values
 
-    :param file: str, the file to edit
-    :param default: dict, predefined metadata values
-    :param ignore: dict, other metadata values to leave unchanged
+    :param file: the file to edit
+    :param default: predefined metadata values
+    :param ignore: other metadata values to leave unchanged
     :param leave_copy: bool, True, if you need to leave copyright information
     :return: dict with pairs 'metadata': 'value'
     """
@@ -115,16 +115,16 @@ def ask_user(file, default, ignore, leave_copy=False):
     return edited_md
 
 
-def set_defaults(title, artist, album, number, genre, date):
+def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bool, date: bool):
     """
     Ask the user for the values that need to be set for all files
 
-    :param title: bool, True, if you need to leave the title
-    :param artist: bool, True, if you need to leave the artist
-    :param album: bool, True, if you need to leave the album
-    :param number: bool, True, if you need to leave the number
-    :param genre: bool, True, if you need to leave the genre
-    :param date: bool, True, if you need to leave the date
+    :param title: True, if you need to leave the title
+    :param artist: True, if you need to leave the artist
+    :param album: True, if you need to leave the album
+    :param number: True, if you need to leave the number
+    :param genre: True, if you need to leave the genre
+    :param date: True, if you need to leave the date
     :return: default: dict with pairs 'metadata': 'predefined value'
              ignored: set with data that should be ignored in ask_user
     """
@@ -175,13 +175,13 @@ def parse_log():
         return json.load(read_file)
 
 
-def set_metadata(files, path, clear_all):
+def set_metadata(files: dict, path: str, clear_all: bool):
     """
     Set, edit or delete the metadata of the selected file
 
-    :param files: dict, information about the metadata of each file
-    :param path: str, the directory where these files are located
-    :param clear_all: bool, True, if you need to remove all the metadata
+    :param files: information about the metadata of each file
+    :param path: the directory where these files are located
+    :param clear_all: True, if you need to remove all the metadata
     :return: None
     """
 
@@ -206,10 +206,10 @@ def set_metadata(files, path, clear_all):
         track.save()
 
 
-def create_logs(log):
+def create_logs(log: dict):
     """
     Create json file and save the log in it
-    :param log: dict, the data to be saved
+    :param log: the data to be saved
     :return: None
     """
     file_name = f"{datetime.today().isoformat('-').replace(':', '-').split('.')[0]}.json"
