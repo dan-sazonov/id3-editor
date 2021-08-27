@@ -1,3 +1,5 @@
+import argparse
+
 VERSION = {
     'major': 1,
     'minor': 0,
@@ -21,3 +23,40 @@ LOG_PATH = './logs/'
 
 # data to be saved with the -c flag
 COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}
+
+
+def set_parser():
+    """
+    Set and configure the CLI argument parser
+
+    :return: parser
+    """
+    parser = argparse.ArgumentParser(
+        prog='id3-editor',
+        description='''The simplest console tool for batch editing of mp3 metadata''',
+        epilog='''(c) 2021, Dan Sazonov. Apache-2.0 License'''
+    )
+
+    parser.add_argument('-m', '--minimal', action='store_true', default=False,
+                        help='set only title, artist, album and genre')
+    parser.add_argument('-c', '--copyright', action='store_true', default=False,
+                        help='leave the "copyright" parameter unchanged')
+    parser.add_argument('-l', '--log', action='store_true', default=False,
+                        help='create json log with all metadata')
+    parser.add_argument('-p', '--parse', action='store_true', default=False,
+                        help='parse json log and set this metadata')
+    parser.add_argument('-d', '--delete', action='store_true', default=False,
+                        help='delete all metadata from these tracks')
+    parser.add_argument('-T', '--title', action='store_true', default=False,
+                        help='set a title for all tracks')
+    parser.add_argument('-R', '--artist', action='store_true', default=False,
+                        help='set an artist for all tracks')
+    parser.add_argument('-A', '--album', action='store_true', default=False,
+                        help='set an album for all tracks')
+    parser.add_argument('-N', '--number', action='store_true', default=False,
+                        help='set a number for all tracks')
+    parser.add_argument('-G', '--genre', action='store_true', default=False,
+                        help='set a genre for all tracks')
+    parser.add_argument('-D', '--date', action='store_true', default=False,
+                        help='set a date for all tracks')
+    return parser
