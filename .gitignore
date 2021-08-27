@@ -151,6 +151,6 @@ cython_debug/
 
 # Other
 test.py
-drafts/todo
+drafts/
 log.json
 logs/
