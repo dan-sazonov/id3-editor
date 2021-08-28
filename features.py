@@ -1,4 +1,5 @@
 from datetime import date
+from mutagen.easyid3 import EasyID3
 
 
 def remove_brackets(s: str):
@@ -12,7 +13,7 @@ def remove_brackets(s: str):
     return s.split(split_symbol)[index].strip(' ')
 
 
-def validate_year(year):
+def validate_year(year: str):
     """
     Validate the value of year
 
@@ -24,3 +25,22 @@ def validate_year(year):
         return year
     else:
         return ''
+
+
+def validate_data(track: EasyID3, data: str):
+    """
+    Call the necessary function for validating metadata depending on the parameter
+
+    :param track: object with all metadata
+    :param data: the current parameter
+    :return: the right value for this parameter
+    """
+    try:
+        value = track[data][0]
+    except KeyError:
+        return ''
+
+    if data == 'date':
+        return validate_year(value)
+    elif data in {'title', 'artist', 'album', 'genre'}:
+        return remove_brackets(value)
