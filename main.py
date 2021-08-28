@@ -61,10 +61,9 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy=False):
             # (if the data in  ignored, then they are in default also)
             continue
 
-        try:
-            tmp = features.remove_brackets(track[data][0])
-        except KeyError:
-            tmp = ''
+        # validate current value
+        tmp = features.validate_data(track, data)
+
         print(c_bright + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp), end='')
         usr_input = input()
         edited_md[data] = [usr_input] if usr_input else [tmp]
