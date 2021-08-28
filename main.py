@@ -18,7 +18,7 @@ def select_files():
     """
     Select files that need to be edited
 
-    :returns: list of files that need to be edited; working_dir - directory where these files are placed
+    :return: list of files that need to be edited; working_dir - directory where these files are placed
     """
     files = []
     print(c_bright + 'Enter the absolute or relative path to directory: ' + c_reset, end='')
@@ -87,7 +87,7 @@ def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bo
     :param number: True, if you need to leave the number
     :param genre: True, if you need to leave the genre
     :param date: True, if you need to leave the date
-    :return: default: dict with pairs 'metadata': 'predefined value'
+    :return: default: dict with pairs 'metadata': 'predefined value';
              ignored: set with data that should be ignored in ask_user
     """
     default = dict()
