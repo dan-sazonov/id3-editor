@@ -19,12 +19,28 @@ def validate_year(year: str):
 
     :param year: the value that needs to be validated
     :return: the value of the year param, if this value is a digit and is greater than 1800 and not greater than the
-    current year, the empty string otherwise
+             current year, the empty string otherwise
     """
     if year.isdigit() and 1800 <= int(year) <= date.today().year:
         return year
     else:
         return ''
+
+
+def validate_tracknumber(number: str):
+    """
+    Validate the value of tracknumber data
+
+    :param number: the value that needs to be validated
+    :return: the value of the number param before slash, if this value is a digit greater than 0 and not greater
+             than 100
+    """
+    try:
+        number = int(number.split('/')[0])
+    except ValueError:
+        return ''
+
+    return number if 0 < number <= 100 else ''
 
 
 def validate_data(track: EasyID3, data: str):
@@ -44,3 +60,5 @@ def validate_data(track: EasyID3, data: str):
         return validate_year(value)
     elif data in {'title', 'artist', 'album', 'genre'}:
         return remove_brackets(value)
+    elif data == 'tracknumber':
+        return validate_tracknumber(value)
