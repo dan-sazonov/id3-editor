@@ -1,4 +1,5 @@
 import config
+import features
 import colorama
 import sys
 import os
@@ -61,7 +62,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy=False):
             continue
 
         try:
-            tmp = track[data][0]
+            tmp = features.remove_brackets(track[data][0])
         except KeyError:
             tmp = ''
         print(c_bright + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp), end='')
@@ -171,6 +172,7 @@ def set_metadata(files: dict, path: str, clear_all: bool):
 def create_logs(log: dict):
     """
     Create json file and save the log in it
+
     :param log: the data to be saved
     :return: None
     """
