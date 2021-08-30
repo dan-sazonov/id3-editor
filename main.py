@@ -35,7 +35,7 @@ def select_files():
     return files, working_dir
 
 
-def ask_user(file: str, default: dict, ignore: set, leave_copy=False):
+def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     """
     Ask the user for new metadata values
 
@@ -137,13 +137,14 @@ def parse_log():
         return json.load(read_file)
 
 
-def set_metadata(files: dict, path: str, clear_all: bool):
+def set_metadata(files: dict, path: str, clear_all: bool, do_rename: bool):
     """
     Set, edit or delete the metadata of the selected file
 
     :param files: information about the metadata of each file
     :param path: the directory where these files are located
     :param clear_all: True, if you need to remove all the metadata
+    :param do_rename: True, if you need to rename files in the form of artist-track_title
     :return: None
     """
 
@@ -165,7 +166,10 @@ def set_metadata(files: dict, path: str, clear_all: bool):
             if del_data not in actual_data or clear_all:
                 del track[del_data]
 
+        # save metadata and rename file
         track.save()
+        if do_rename:
+            os.rename(current_path, f'{track["artist"][0].replace(" ", "_")}-{track["title"][0].replace(" ", "_")}.mp3')
 
 
 def create_logs(log: dict):
@@ -208,7 +212,7 @@ def main():
             log[file_title] = dict() if namespace.delete else ask_user(file, default, ignored, namespace.copyright)
 
     # edit the metadata
-    set_metadata(log, path, namespace.delete)
+    set_metadata(log, path, namespace.delete, namespace.rename)
 
     if namespace.log and not namespace.parse:
         create_logs(log)

@@ -47,6 +47,8 @@ def set_parser():
                         help='parse json log and set this metadata')
     parser.add_argument('-d', '--delete', action='store_true', default=False,
                         help='delete all metadata from these tracks')
+    parser.add_argument('-r', '--rename', action='store_true', default=False,
+                        help='rename the files in the form of artist_track')
     parser.add_argument('-T', '--title', action='store_true', default=False,
                         help='set a title for all tracks')
     parser.add_argument('-R', '--artist', action='store_true', default=False,
