@@ -196,6 +196,7 @@ def main():
     """
     cli_parser = config.set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
+    scan_mode = namespace.scan
     log = parse_log() if namespace.parse else dict()
     mp3_files, path = select_files()
     default, ignored = set_defaults(namespace.title, namespace.artist, namespace.album, namespace.number,
@@ -209,12 +210,14 @@ def main():
         for file in mp3_files:
             # ask for information about each file, fill in the log
             file_title = file.split('/')[-1]
-            log[file_title] = dict() if namespace.delete else ask_user(file, default, ignored, namespace.copyright)
+            log[file_title] = dict() if namespace.delete else dict(EasyID3(file)) if scan_mode \
+                else ask_user(file, default, ignored, namespace.copyright)
 
     # edit the metadata
-    set_metadata(log, path, namespace.delete, namespace.rename)
+    if not scan_mode:
+        set_metadata(log, path, namespace.delete, namespace.rename)
 
-    if namespace.log and not namespace.parse:
+    if (namespace.log or scan_mode) and not namespace.parse:
         create_logs(log)
 
     print(f'{c_green}\nDone! Press [Enter] to exit')
