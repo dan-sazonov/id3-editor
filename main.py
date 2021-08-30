@@ -149,7 +149,7 @@ def set_metadata(files: dict, path: str, clear_all: bool, do_rename: bool):
     """
 
     for file in files:
-        current_path = os.path.join(path, file)
+        current_path = os.path.join(path, file).replace('\\', '/')
         # valid the path
         if not os.path.exists(current_path):
             print(f'{c_red}warn: {c_reset}{current_path} doesn\'t exist. Try to run again.')
@@ -169,7 +169,8 @@ def set_metadata(files: dict, path: str, clear_all: bool, do_rename: bool):
         # save metadata and rename file
         track.save()
         if do_rename:
-            os.rename(current_path, f'{track["artist"][0].replace(" ", "_")}-{track["title"][0].replace(" ", "_")}.mp3')
+            file_name_tmp = f'{track["artist"][0].replace(" ", "_")}-{track["title"][0].replace(" ", "_")}.mp3'
+            os.rename(current_path, f'{"/".join(current_path.split("/")[:-1])}/{file_name_tmp}')
 
 
 def create_logs(log: dict):
