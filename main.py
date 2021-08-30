@@ -169,7 +169,10 @@ def set_metadata(files: dict, path: str, clear_all: bool, do_rename: bool):
         # save metadata and rename file
         track.save()
         if do_rename:
-            file_name_tmp = f'{track["artist"][0].replace(" ", "_")}-{track["title"][0].replace(" ", "_")}.mp3'
+            # fucking terrible code, i know
+            artist_tmp = track["artist"][0].replace(" ", "_").replace("-", "_")
+            title_tmp = track["title"][0].replace(" ", "_").replace("-", "_")
+            file_name_tmp = f'{artist_tmp}-{title_tmp}.mp3'.replace("/", "")
             os.rename(current_path, f'{"/".join(current_path.split("/")[:-1])}/{file_name_tmp}')
 
 
