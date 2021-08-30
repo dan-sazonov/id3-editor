@@ -12,6 +12,7 @@ c_reset = colorama.Style.RESET_ALL
 c_red = colorama.Fore.RED
 c_green = colorama.Fore.GREEN
 c_bright = colorama.Style.BRIGHT
+c_dim = colorama.Style.DIM
 
 
 def select_files():
@@ -21,11 +22,11 @@ def select_files():
     :return: list of files that need to be edited; working_dir - directory where these files are placed
     """
     files = []
-    print(c_bright + 'Enter the absolute or relative path to directory: ' + c_reset, end='')
+    print(f'{c_bright}Enter the absolute or relative path to directory: {c_reset}', end='')
     working_dir = input().replace('\\', '/')
 
     if not os.path.exists(working_dir):
-        print(c_red + 'err: ' + c_reset + 'incorrect path. Try again.')
+        print(f'{c_red}err: {c_reset}incorrect path. Try again.')
         exit(1)
 
     for file in os.listdir(working_dir):
@@ -50,7 +51,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy=False):
     track = EasyID3(file)
     edited_md = dict()
     actual_data = set(track.keys())
-    print('\n' + c_green + file_title + c_reset)
+    print(f'\n{c_green}{file_title}{c_reset}')
 
     # getting data from user and editing the metadata of the current file
     for data in text:
@@ -64,7 +65,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy=False):
         # validate current value
         tmp = features.validate_data(track, data)
 
-        print(c_bright + text[data] + c_reset + colorama.Style.DIM + ' ({0}): '.format(tmp), end='')
+        print(f'{c_bright}{text[data]}{c_reset}{c_dim} ({tmp}): ', end='')
         usr_input = input()
         edited_md[data] = [usr_input] if usr_input else [tmp]
 
@@ -101,7 +102,7 @@ def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bo
 
     for data in args:
         if args[data]:
-            print(c_bright + 'Set the {0} for all next tracks: '.format(data) + c_reset, end='')
+            print(f'{c_bright}Set the {data} for all next tracks: {c_reset}', end='')
             default[data] = input()
             ignored.add(data)
 
@@ -123,13 +124,12 @@ def parse_log():
     log_file = '<default file not found>' if not files else max(files, key=os.path.getctime)
 
     # ask the path to the log file
-    print(c_bright + 'Enter the absolute or relative path to the log file: ' + c_reset + colorama.Style.DIM +
-          f' ({log_file}): ', end='')
+    print(f'{c_bright}Enter the absolute or relative path to the log file: {c_reset}{c_dim} ({log_file}): ', end='')
     usr_input = input()
     log_file = usr_input if usr_input else log_file
 
     if not os.path.exists(log_file):
-        print(c_red + 'err: ' + c_reset + 'The log file wasn\'t found. Make sure that the correct path is specified.')
+        print(f'{c_red}err: {c_reset}The log file wasn\'t found. Make sure that the correct path is specified.')
         exit(1)
 
     # read log
@@ -151,7 +151,7 @@ def set_metadata(files: dict, path: str, clear_all: bool):
         current_path = os.path.join(path, file)
         # valid the path
         if not os.path.exists(current_path):
-            print(c_red + 'warn: ' + c_reset + f'{current_path} doesn\'t exist. Try to run again.')
+            print(f'{c_red}warn: {c_reset}{current_path} doesn\'t exist. Try to run again.')
             continue
         track = EasyID3(current_path)
         actual_data = files[file].keys()
@@ -175,7 +175,7 @@ def create_logs(log: dict):
     :param log: the data to be saved
     :return: None
     """
-    file_name = f"{datetime.today().isoformat('-').replace(':', '-').split('.')[0]}.json"
+    file_name = datetime.today().isoformat('-').replace(':', '-').split('.')[0] + '.json'
     log_path = os.path.join(config.LOG_PATH, file_name)
     if not os.path.isdir(config.LOG_PATH):
         os.mkdir(config.LOG_PATH)
@@ -213,7 +213,7 @@ def main():
     if namespace.log and not namespace.parse:
         create_logs(log)
 
-    print(c_green + '\nDone! Press [Enter] to exit')
+    print(f'{c_green}\nDone! Press [Enter] to exit')
     input()
 
 
