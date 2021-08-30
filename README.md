@@ -41,7 +41,7 @@ parameter will be asked once at start, and will be applied to all tracks. It loo
   </ul>
 </details>
 
-<h3>Logging</h3>
+<h3>Logging and manual mode</h3>
 
 If you want you can get a json log with the metadata of the edited files. To do this, run the program with the `-l` or `--log` flag. By the path that is stored in the
 `LOG_PATH` variable in the file `config.py`, a file of the following format will be created:
@@ -53,12 +53,16 @@ If you want you can get a json log with the metadata of the edited files. To do 
 }
  ```
 You can restore metadata based on information from any log file. For example, this may be useful if you have the same files in different directories and you need to edit 
-them all. Run the program with the `-p` or `--parse` flag, set the log file and enter the path to the required directory. Any others flags will be ignored.
+them all. Run the program with the `-p` or `--parse` flag, set the log file and enter the path to the required directory. Any others flags will be ignored.  
+  
+Also you can write the current unchanged metadata to a json file. To do this, run the program with the `-s` or `--scan` flag. I call this **manual mode** - at first you
+create a json file with the unchanged metadata, then you edit them and apply it by running the program with the `-p` or `--parse` flag.
 
 <h3>More Features</h3>
 
 - If the file contains information about the copyright holder and you want to leave it, use the `-c` or `--copyright` flag.
 - You can run the program in minimal mode with `-m` or `--minimal` flag. It will only ask for title, artist, album and genre. Other data will be cleared.
+- Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag.
 - To remove all data from the tracks, run the program with the `-d` or `--delete` flag. Any other flags will be ignored.
 - To view the quick help, run the program with the `-h` or `--help` flag.
 
