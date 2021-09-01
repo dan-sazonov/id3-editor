@@ -7,6 +7,8 @@ import json
 from datetime import datetime
 from mutagen.easyid3 import EasyID3
 
+np = features.norm_path
+
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
 c_red = colorama.Fore.RED
@@ -23,7 +25,7 @@ def select_files():
     """
     files = []
     print(f'{c_bright}Enter the absolute or relative path to directory: {c_reset}', end='')
-    working_dir = input().replace('\\', '/')
+    working_dir = np(input())
 
     if not os.path.exists(working_dir):
         print(f'{c_red}err: {c_reset}incorrect path. Try again.')
@@ -31,7 +33,7 @@ def select_files():
 
     for file in os.listdir(working_dir):
         if file.split('.')[-1] == 'mp3':
-            files.append(f'{working_dir}/{file}')
+            files.append(np(f'{working_dir}/{file}'))
     return files, working_dir
 
 
@@ -45,8 +47,8 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     :param leave_copy: bool, True, if you need to leave copyright information
     :return: dict with pairs 'metadata': 'value'
     """
-    file = file.replace('\\', '/')
-    file_title = file.split('/')[-1]
+    file = np(file)
+    file_title = os.path.split(file)[-1]
     text = config.LOCALE
     track = EasyID3(file)
     edited_md = dict()
@@ -117,16 +119,17 @@ def parse_log():
     """
 
     # find the later log file
-    files = os.listdir(config.LOG_PATH)
+    log_path = np(config.LOG_PATH)
+    files = os.listdir(log_path)
     files = [file for file in files if file.split('.')[-1] == 'json']
-    files = [os.path.join(config.LOG_PATH, file) for file in files]
+    files = [np(os.path.join(log_path, file)) for file in files]
     files = [file for file in files if os.path.isfile(file)]
-    log_file = '<default file not found>' if not files else max(files, key=os.path.getctime)
+    log_file = np('<default file not found>' if not files else max(files, key=os.path.getctime))
 
     # ask the path to the log file
     print(f'{c_bright}Enter the absolute or relative path to the log file: {c_reset}{c_dim} ({log_file}): ', end='')
     usr_input = input()
-    log_file = usr_input if usr_input else log_file
+    log_file = np(usr_input) if usr_input else log_file
 
     if not os.path.exists(log_file):
         print(f'{c_red}err: {c_reset}The log file wasn\'t found. Make sure that the correct path is specified.')
@@ -149,7 +152,7 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
     """
     renamed = dict()
     for file in files:
-        current_path = os.path.join(path, file).replace('\\', '/')
+        current_path = np(os.path.join(path, file))
         # valid the path
         if not os.path.exists(current_path):
             print(f'{c_red}warn: {c_reset}{current_path} doesn\'t exist. Try to run again.')
@@ -172,7 +175,7 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
             tmp_data = [track[i][0].translate(str.maketrans({' ': '_', '-': '_', '/': ''}))
                         for i in ('artist', 'title')]
             file_name_tmp = '{0}-{1}.mp3'.format(*tmp_data)
-            os.rename(current_path, f'{path}/{file_name_tmp}')
+            os.rename(current_path, np(f'{path}/{file_name_tmp}'))
             renamed[file] = file_name_tmp
 
     return renamed
@@ -187,9 +190,10 @@ def create_logs(log: dict, renamed: dict):
     :return: None
     """
     file_name = datetime.today().isoformat('-').replace(':', '-').split('.')[0] + '.json'
-    log_path = os.path.join(config.LOG_PATH, file_name)
-    if not os.path.isdir(config.LOG_PATH):
-        os.mkdir(config.LOG_PATH)
+    log_path = np(config.LOG_PATH)
+    log_file_path = os.path.join(log_path, file_name)
+    if not os.path.isdir(log_path):
+        os.mkdir(log_path)
 
     if renamed:
         # rename the files in the log
@@ -197,7 +201,7 @@ def create_logs(log: dict, renamed: dict):
         log = log_tmp
         del log_tmp
 
-    with open(log_path, 'w', encoding='utf-8') as write_file:
+    with open(log_file_path, 'w', encoding='utf-8') as write_file:
         json.dump(log, write_file, ensure_ascii=False)
 
 
@@ -226,7 +230,7 @@ def main():
     if not namespace.parse:
         for file in mp3_files:
             # ask for information about each file, fill in the log
-            file_title = file.split('/')[-1]
+            file_title = os.path.split(file)[-1]
             log[file_title] = dict() if namespace.delete else dict(EasyID3(file)) if scan_mode \
                 else ask_user(file, default, ignored, namespace.copyright)
 

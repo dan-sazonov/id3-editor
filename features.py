@@ -1,3 +1,4 @@
+import os
 from datetime import date
 from mutagen.easyid3 import EasyID3
 
@@ -62,3 +63,7 @@ def validate_data(track: EasyID3, data: str):
         return remove_brackets(value)
     elif data == 'tracknumber':
         return validate_tracknumber(value)
+
+
+def norm_path(x):
+    return os.path.normpath(x)
