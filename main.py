@@ -137,9 +137,9 @@ def parse_log():
         return json.load(read_file)
 
 
-def set_metadata(files: dict, path: str, clear_all: bool, do_rename: bool):
+def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
     """
-    Set, edit or delete the metadata of the selected file
+    Set, edit or delete the metadata of the selected file and rename these files
 
     :param files: information about the metadata of each file
     :param path: the directory where these files are located
@@ -147,7 +147,7 @@ def set_metadata(files: dict, path: str, clear_all: bool, do_rename: bool):
     :param do_rename: True, if you need to rename files in the form of artist-track_title
     :return: None
     """
-
+    renamed = dict()
     for file in files:
         current_path = os.path.join(path, file).replace('\\', '/')
         # valid the path
@@ -174,19 +174,29 @@ def set_metadata(files: dict, path: str, clear_all: bool, do_rename: bool):
             title_tmp = track["title"][0].replace(" ", "_").replace("-", "_")
             file_name_tmp = f'{artist_tmp}-{title_tmp}.mp3'.replace("/", "")
             os.rename(current_path, f'{"/".join(current_path.split("/")[:-1])}/{file_name_tmp}')
+            renamed[file] = file_name_tmp
+
+    return renamed
 
 
-def create_logs(log: dict):
+def create_logs(log: dict, renamed: dict):
     """
     Create json file and save the log in it
 
     :param log: the data to be saved
+    :param renamed: dict like this: {'old_file_name.mp3': 'new_file_name.mp3'}
     :return: None
     """
     file_name = datetime.today().isoformat('-').replace(':', '-').split('.')[0] + '.json'
     log_path = os.path.join(config.LOG_PATH, file_name)
     if not os.path.isdir(config.LOG_PATH):
         os.mkdir(config.LOG_PATH)
+
+    if renamed:
+        # rename the files in the log
+        log_tmp = {renamed[i]: log[i] for i in log}
+        log = log_tmp
+        del log_tmp
 
     with open(log_path, 'w', encoding='utf-8') as write_file:
         json.dump(log, write_file)
@@ -198,10 +208,14 @@ def main():
 
     :return: None
     """
+    # get the CLI arguments
     cli_parser = config.set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
     scan_mode = namespace.scan
     log = parse_log() if namespace.parse else dict()
+
+    # set the local variables
+    renamed_files = False
     mp3_files, path = select_files()
     default, ignored = set_defaults(namespace.title, namespace.artist, namespace.album, namespace.number,
                                     namespace.genre, namespace.date)
@@ -217,12 +231,13 @@ def main():
             log[file_title] = dict() if namespace.delete else dict(EasyID3(file)) if scan_mode \
                 else ask_user(file, default, ignored, namespace.copyright)
 
-    # edit the metadata
+    # edit the files
     if not scan_mode:
-        set_metadata(log, path, namespace.delete, namespace.rename)
+        renamed_files = edit_files(log, path, namespace.delete, namespace.rename)
 
+    # create log file
     if (namespace.log or scan_mode) and not namespace.parse:
-        create_logs(log)
+        create_logs(log, renamed_files)
 
     print(f'{c_green}\nDone! Press [Enter] to exit')
     input()
