@@ -64,6 +64,8 @@ create a json file with the unchanged metadata, then you edit them and apply it 
 - You can run the program in minimal mode with `-m` or `--minimal` flag. It will only ask for title, artist, album and genre. Other data will be cleared.
 - Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag. Please note that the information in the logs will be associated with the new name.
 - To remove all data from the tracks, run the program with the `-d` or `--delete` flag. Any other flags will be ignored.
+- If you need to go back to editing the previous track in the interactive mode, enter the `^` character in any field.
+- In interactive mode, two colons after the letters _a_, _o_ or _u_ will be replaced with this letter with an umlaut. For example, `Mo::tley Cru::e` will be replaced by `Mötley Crüe`.
 - To view the quick help, run the program with the `-h` or `--help` flag.
 
 ## 🤝 Contributing
