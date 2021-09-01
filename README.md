@@ -3,7 +3,7 @@
 ![Apache 2.0](https://img.shields.io/github/license/dan-sazonov/id3-editor)
 ![Tested on linux, Win10](https://img.shields.io/badge/tested%20on-Linux%20|%20Win10-blue)<br>
 
-**The simplest console tool for batch editing of mp3 metadata in interactive mode**
+**The simplest console tool for batch editing of mp3 metadata in interactive or manual mode**
 
 ## 📦 Installation
 Clone this repo, change the directory and install the necessary requirements:
@@ -62,7 +62,7 @@ create a json file with the unchanged metadata, then you edit them and apply it 
 
 - If the file contains information about the copyright holder and you want to leave it, use the `-c` or `--copyright` flag.
 - You can run the program in minimal mode with `-m` or `--minimal` flag. It will only ask for title, artist, album and genre. Other data will be cleared.
-- Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag.
+- Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag. Please note that the information in the logs will be associated with the new name.
 - To remove all data from the tracks, run the program with the `-d` or `--delete` flag. Any other flags will be ignored.
 - To view the quick help, run the program with the `-h` or `--help` flag.
 
