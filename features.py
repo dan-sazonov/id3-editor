@@ -70,8 +70,20 @@ def validate_data(track: EasyID3, data: str):
 
 
 def replace_umlauts(s: str):
+    """
+    Replace special symbols with the letters with umlauts (ä, ö and ü)
+
+    :param s: string with the special symbols (::)
+    :return: edited string
+    """
     return s.replace('a::', 'ä').replace('o::', 'ö').replace('u::', 'ü')
 
 
 def validate_input(data: str):
+    """
+    Call the necessary function for validating data entered by the user
+
+    :param data: the string that needs to be validated
+    :return: edited string
+    """
     return replace_umlauts(data)

@@ -45,7 +45,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     :param default: predefined metadata values
     :param ignore: other metadata values to leave unchanged
     :param leave_copy: bool, True, if you need to leave copyright information
-    :return: dict with pairs 'metadata': 'value'
+    :return: dict with pairs 'metadata': 'value'; bool var: True, if you need to return to the prev iteration
     """
     file = np(file)
     file_title = os.path.split(file)[-1]
