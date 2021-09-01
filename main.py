@@ -199,7 +199,7 @@ def create_logs(log: dict, renamed: dict):
         del log_tmp
 
     with open(log_path, 'w', encoding='utf-8') as write_file:
-        json.dump(log, write_file)
+        json.dump(log, write_file, ensure_ascii=False)
 
 
 def main():
