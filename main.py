@@ -69,6 +69,8 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
 
         print(f'{c_bright}{text[data]}{c_reset}{c_dim} ({tmp}): ', end='')
         usr_input = input()
+        if usr_input == '^':
+            return dict(), True
         edited_md[data] = [features.validate_input(usr_input)] if usr_input else [tmp]
 
     # leave information about the copyright holder
@@ -77,7 +79,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
             if data in actual_data:
                 edited_md[data] = track[data][0]
 
-    return edited_md
+    return edited_md, False
 
 
 def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bool, date: bool):
@@ -228,11 +230,14 @@ def main():
     if namespace.copyright:
         ignored.update(config.COPYRIGHT)
     if not namespace.parse:
-        for file in mp3_files:
-            # ask for information about each file, fill in the log
+        cur_index = 0
+        while cur_index < len(mp3_files):
+            file = mp3_files[cur_index]
+            # ask for information about each file, fill in the log, or return to prev iteration
             file_title = os.path.split(file)[-1]
-            log[file_title] = dict() if namespace.delete else dict(EasyID3(file)) if scan_mode \
-                else ask_user(file, default, ignored, namespace.copyright)
+            log[file_title], need_returns = (dict(), False) if namespace.delete else (dict(EasyID3(file)), False) \
+                if scan_mode else ask_user(file, default, ignored, namespace.copyright)
+            cur_index += -1 if need_returns else 1
 
     # edit the files
     if not scan_mode:
