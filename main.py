@@ -136,7 +136,7 @@ def parse_log():
         exit(1)
 
     # read log
-    with open(log_file, 'r') as read_file:
+    with open(log_file, 'r', encoding='utf-8') as read_file:
         return json.load(read_file)
 
 
