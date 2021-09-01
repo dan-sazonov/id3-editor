@@ -3,6 +3,10 @@ from datetime import date
 from mutagen.easyid3 import EasyID3
 
 
+def get_norm_path(x):
+    return os.path.normpath(x)
+
+
 def remove_brackets(s: str):
     """
     Remove text in the square brackets
@@ -65,5 +69,9 @@ def validate_data(track: EasyID3, data: str):
         return validate_tracknumber(value)
 
 
-def norm_path(x):
-    return os.path.normpath(x)
+def replace_umlauts(s: str):
+    return s.replace('a::', 'ä').replace('o::', 'ö').replace('u::', 'ü')
+
+
+def validate_input(data: str):
+    return replace_umlauts(data)

@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 from mutagen.easyid3 import EasyID3
 
-np = features.norm_path
+np = features.get_norm_path
 
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
@@ -69,7 +69,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
 
         print(f'{c_bright}{text[data]}{c_reset}{c_dim} ({tmp}): ', end='')
         usr_input = input()
-        edited_md[data] = [usr_input] if usr_input else [tmp]
+        edited_md[data] = [features.validate_input(usr_input)] if usr_input else [tmp]
 
     # leave information about the copyright holder
     if leave_copy:
