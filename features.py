@@ -1,3 +1,4 @@
+import config
 import os
 from datetime import date
 from mutagen.easyid3 import EasyID3
@@ -101,11 +102,16 @@ def replace_umlauts(s: str) -> str:
     return s.replace('a::', 'ä').replace('o::', 'ö').replace('u::', 'ü')
 
 
-def validate_input(data: str):
+def validate_input(data: str, value: str):
     """
     Call the necessary function for validating data entered by the user
 
-    :param data: the string that needs to be validated
+    :param data: the current parameter
+    :param value: the string that needs to be validated
     :return: edited string
     """
-    return replace_umlauts(data)
+    if config.SKIP_VALIDATION:
+        return value
+
+    if data in {'title', 'artist', 'album'}:
+        return replace_umlauts(value)

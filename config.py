@@ -28,6 +28,8 @@ COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}
 LEAVE_SOME_DATA = False
 LEAVE_THIS_DATA = ['tracknumber', 'date']
 
+# if True, еру data entered by user won't be validated
+SKIP_VALIDATION = False
 
 def set_parser():
     """

@@ -71,7 +71,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         usr_input = input()
         if usr_input == '^':
             return dict(), True
-        edited_md[data] = [features.validate_input(usr_input)] if usr_input else [tmp]
+        edited_md[data] = [features.validate_input(data, usr_input)] if usr_input else [tmp]
 
     # leave information about the copyright holder
     if leave_copy:
