@@ -67,7 +67,7 @@ def validate_tracknumber(number: str) -> str:
     except ValueError:
         return ''
 
-    return number if 0 < number <= 100 else ''
+    return str(number) if 0 < number <= 100 else ''
 
 
 def validate_data(track: EasyID3, data: str):
