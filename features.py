@@ -100,7 +100,7 @@ def replace_umlauts(s: str) -> str:
     :return: edited string
     """
 
-    out = s.replace('A::', 'Ä').replace('O::', 'Ö').replace('U::', 'Ü').replace('a::', 'ä').replace('o::', 'ö')\
+    out = s.replace('A::', 'Ä').replace('O::', 'Ö').replace('U::', 'Ü').replace('a::', 'ä').replace('o::', 'ö') \
         .replace('u::', 'ü')
     return out
 
@@ -118,5 +118,9 @@ def validate_input(data: str, value: str):
 
     if data in {'title', 'artist', 'album'}:
         return replace_umlauts(value)
+    elif data == 'date':
+        return validate_year(value)
+    elif data == 'tracknumber':
+        return validate_tracknumber(value)
     else:
         return value
