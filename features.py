@@ -3,11 +3,21 @@ from datetime import date
 from mutagen.easyid3 import EasyID3
 
 
-def get_norm_path(x):
-    return os.path.normpath(x)
+def get_norm_path(s: str) -> str:
+    """
+    Normalize the path, replace slashes if necessary
+
+    :param s: the invalidated path
+    :return: correct path
+    """
+    return os.path.normpath(s)
 
 
-def remove_brackets(s: str):
+def get_new_filename(s: str) -> str:
+    pass
+
+
+def remove_brackets(s: str) -> str:
     """
     Remove text in the square brackets
 
@@ -18,7 +28,7 @@ def remove_brackets(s: str):
     return s.split(split_symbol)[index].strip(' ')
 
 
-def validate_year(year: str):
+def validate_year(year: str) -> str:
     """
     Validate the value of year
 
@@ -32,7 +42,7 @@ def validate_year(year: str):
         return ''
 
 
-def validate_tracknumber(number: str):
+def validate_tracknumber(number: str) -> str:
     """
     Validate the value of tracknumber data
 
@@ -69,7 +79,7 @@ def validate_data(track: EasyID3, data: str):
         return validate_tracknumber(value)
 
 
-def replace_umlauts(s: str):
+def replace_umlauts(s: str) -> str:
     """
     Replace special symbols with the letters with umlauts (ä, ö and ü)
 
