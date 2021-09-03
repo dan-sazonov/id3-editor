@@ -14,7 +14,7 @@ $ python3 -m pip install -r requirements.txt
 ```
 _note: you may need to enter_ `python` _instead of_ `python3`.<br>
 The program was tested on Win10 x64 and Ubuntu 20.04 x64 on Python 3.9.0. I do not know if everything will work fine on other os, and it will be great if you share
-your experience of using it and tell me about the found errors.
+your experience of using it and tell me about the found bugs.
 
 ## ⚙ Usage
 The easiest way to start is just:
@@ -66,6 +66,8 @@ create a json file with the unchanged metadata, then you edit them and apply it 
 - To remove all data from the tracks, run the program with the `-d` or `--delete` flag. Any other flags will be ignored.
 - If you need to go back to editing the previous track in the interactive mode, enter the `^` character in any field.
 - In interactive mode, two colons after the letters _a_, _o_ or _u_ will be replaced with this letter with an umlaut. For example, `Mo::tley Cru::e` will be replaced by `Mötley Crüe`.
+- To avoid bugs, the data entered by the user will be validated. To enable it, set the `SKIP_VALIDATION` variable in `config.py` to `True`. Be careful using it!
+- By default, the track number and the release year will be deleted in the minimal mode. To leave them, set the `LEAVE_SOME_DATA` variable in `config.py` to `True`.
 - To view the quick help, run the program with the `-h` or `--help` flag.
 
 ## 🤝 Contributing

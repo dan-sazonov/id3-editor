@@ -2,7 +2,7 @@ import argparse
 
 VERSION = {
     'major': 1,
-    'minor': 1,
+    'minor': 3,
     'micro': 0
 }
 
@@ -26,10 +26,11 @@ COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}
 
 # if True, the data from the LEAVE_THIS_DATA will remain unchanged
 LEAVE_SOME_DATA = False
-LEAVE_THIS_DATA = ['tracknumber', 'date']
+LEAVE_THIS_DATA = ['tracknumber', 'date']  # don't change it!
 
 # if True, еру data entered by user won't be validated
 SKIP_VALIDATION = False
+
 
 def set_parser():
     """
