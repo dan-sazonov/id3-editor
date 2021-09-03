@@ -174,9 +174,7 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
         # save metadata and rename file
         track.save()
         if do_rename:
-            tmp_data = [track[i][0].translate(str.maketrans({' ': '_', '-': '_', '/': ''}))
-                        for i in ('artist', 'title')]
-            file_name_tmp = '{0}-{1}.mp3'.format(*tmp_data)
+            file_name_tmp = features.get_new_filename(track['artist'][0], track['title'][0])
             os.rename(current_path, np(f'{path}/{file_name_tmp}'))
             renamed[file] = file_name_tmp
 
