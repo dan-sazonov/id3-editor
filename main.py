@@ -146,7 +146,7 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
     """
     Set, edit or delete the metadata of the selected file and rename these files
 
-    :param files: information about the metadata of each file
+    :param files: information from user about the metadata of each file
     :param path: the directory where these files are located
     :param clear_all: True, if you need to remove all the metadata
     :param do_rename: True, if you need to rename files in the form of artist-track_title
@@ -160,15 +160,24 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
             print(f'{c_red}warn: {c_reset}{current_path} doesn\'t exist. Try to run again.')
             continue
         track = EasyID3(current_path)
-        actual_data = files[file].keys()
+        actual_data = set(files[file].keys())
 
         # set or edit metadata
+        if config.LEAVE_SOME_DATA:
+            if 'tracknumber' in track.keys():
+                actual_data.add('tracknumber')
+                track['tracknumber'] = [features.validate_tracknumber(track['tracknumber'][0])]
+            if 'date' in track.keys():
+                actual_data.add('date')
+                track['date'] = [features.validate_year(track['date'][0])]
+
         for data in files[file]:
             track[data] = files[file][data]
 
         # delete ignored metadata
         for del_data in track:
             if del_data not in actual_data or clear_all:
+                print('del: ', track[del_data], clear_all)
                 del track[del_data]
 
         # save metadata and rename file

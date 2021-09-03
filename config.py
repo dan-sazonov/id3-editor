@@ -24,6 +24,8 @@ LOG_PATH = './logs/'
 # data to be saved with the -c flag
 COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}
 
+LEAVE_SOME_DATA = False
+
 
 def set_parser():
     """
