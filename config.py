@@ -24,7 +24,9 @@ LOG_PATH = './logs/'
 # data to be saved with the -c flag
 COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}
 
+# if True, the data from the LEAVE_THIS_DATA will remain unchanged
 LEAVE_SOME_DATA = False
+LEAVE_THIS_DATA = ['tracknumber', 'date']
 
 
 def set_parser():

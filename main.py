@@ -163,21 +163,19 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
         actual_data = set(files[file].keys())
 
         # set or edit metadata
-        if config.LEAVE_SOME_DATA:
-            if 'tracknumber' in track.keys():
-                actual_data.add('tracknumber')
-                track['tracknumber'] = [features.validate_tracknumber(track['tracknumber'][0])]
-            if 'date' in track.keys():
-                actual_data.add('date')
-                track['date'] = [features.validate_year(track['date'][0])]
-
         for data in files[file]:
             track[data] = files[file][data]
+
+        # validate and leave unchanged some metadata
+        if config.LEAVE_SOME_DATA:
+            for i in config.LEAVE_THIS_DATA:
+                if i in track.keys():
+                    actual_data.add(i)
+                    track[i] = [features.validate_data(track, i)]
 
         # delete ignored metadata
         for del_data in track:
             if del_data not in actual_data or clear_all:
-                print('del: ', track[del_data], clear_all)
                 del track[del_data]
 
         # save metadata and rename file
