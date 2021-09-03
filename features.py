@@ -99,7 +99,10 @@ def replace_umlauts(s: str) -> str:
     :param s: string with the special symbols (::)
     :return: edited string
     """
-    return s.replace('a::', 'ä').replace('o::', 'ö').replace('u::', 'ü')
+
+    out = s.replace('A::', 'Ä').replace('O::', 'Ö').replace('U::', 'Ü').replace('a::', 'ä').replace('o::', 'ö')\
+        .replace('u::', 'ü')
+    return out
 
 
 def validate_input(data: str, value: str):
@@ -115,3 +118,5 @@ def validate_input(data: str, value: str):
 
     if data in {'title', 'artist', 'album'}:
         return replace_umlauts(value)
+    else:
+        return value
