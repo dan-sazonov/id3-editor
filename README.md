@@ -53,7 +53,7 @@ If you want you can get a json log with the metadata of the edited files. To do 
 }
  ```
 You can restore metadata based on information from any log file. For example, this may be useful if you have the same files in different directories and you need to edit 
-them all. Run the program with the `-p` or `--parse` flag, set the log file and enter the path to the required directory. Any others flags will be ignored.  
+them all. Run the program with the `-p` or `--parse` flag, set the log file and enter the path to the required directory. Any others flags except `-r` or `--rename` will be ignored.  
   
 Also you can write the current unchanged metadata to a json file. To do this, run the program with the `-s` or `--scan` flag. I call this **manual mode** - at first you
 create a json file with the unchanged metadata, then you edit them and apply it by running the program with the `-p` or `--parse` flag.
