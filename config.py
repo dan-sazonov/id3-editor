@@ -58,6 +58,8 @@ def set_parser():
                         help='create the log file with the current values of the metadata')
     parser.add_argument('-r', '--rename', action='store_true', default=False,
                         help='rename the files in the form of artist_track')
+    parser.add_argument('--auto_rename', action='store_true', default=False,
+                        help='rename the files in the form of artist_track without changing metadata')
     parser.add_argument('-T', '--title', action='store_true', default=False,
                         help='set a title for all tracks')
     parser.add_argument('-R', '--artist', action='store_true', default=False,

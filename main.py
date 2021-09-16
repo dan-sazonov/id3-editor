@@ -241,12 +241,12 @@ def main():
             # ask for information about each file, fill in the log, or return to prev iteration
             file_title = os.path.split(file)[-1]
             log[file_title], need_returns = (dict(), False) if namespace.delete else (dict(EasyID3(file)), False) \
-                if scan_mode else ask_user(file, default, ignored, namespace.copyright)
+                if (scan_mode or namespace.auto_rename) else ask_user(file, default, ignored, namespace.copyright)
             cur_index += -1 if need_returns else 1
 
     # edit the files
     if not scan_mode:
-        renamed_files = edit_files(log, path, namespace.delete, namespace.rename)
+        renamed_files = edit_files(log, path, namespace.delete, (namespace.rename or namespace.auto_rename))
 
     # create log file
     if (namespace.log or scan_mode) and not namespace.parse:
