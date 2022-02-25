@@ -2,7 +2,7 @@
 ![OpenSource](https://img.shields.io/badge/Open%20Source-%E2%99%A5-red)
 ![Apache 2.0](https://img.shields.io/github/license/dan-sazonov/id3-editor)
 ![Tested on linux, Win10](https://img.shields.io/badge/tested%20on-Linux%20|%20Win10-blue)
-[![Change language](https://img.shields.io/badge/%D0%AF%D0%B7%D1%8B%D0%BA%20%D1%80%D0%B8%D0%B4%D0%BC%D0%B8-Ru-9cf)](README_ru.md)<br>
+[![Change language](https://img.shields.io/badge/Language-En-9cf)](README.md)<br>
 
 **The simplest console tool for batch editing of mp3 metadata in interactive or manual mode**
 
