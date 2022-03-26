@@ -1,22 +1,15 @@
 import json
 import os
 import sys
-from datetime import datetime
 
-import colorama
 from mutagen.easyid3 import EasyID3
 
 import config
 import features
+import logger
 
 np = os.path.normpath
-
-colorama.init()
-c_reset = colorama.Style.RESET_ALL
-c_red = colorama.Fore.RED
-c_green = colorama.Fore.GREEN
-c_bright = colorama.Style.BRIGHT
-c_dim = colorama.Style.DIM
+c = config.ColorMethods()
 
 
 def select_files():
@@ -26,11 +19,11 @@ def select_files():
     :return: list of files that need to be edited; working_dir - directory where these files are placed
     """
     files = []
-    print(f'{c_bright}Enter the absolute or relative path to directory: {c_reset}', end='')
+    print(f'{c.bright}Enter the absolute or relative path to directory: {c.reset}', end='')
     working_dir = np(input())
 
     if not os.path.exists(working_dir):
-        print(f'{c_red}err: {c_reset}incorrect path. Try again.')
+        print(f'{c.red}err: {c.reset}incorrect path. Try again.')
         exit(1)
 
     for file in os.listdir(working_dir):
@@ -55,7 +48,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     track = EasyID3(file)
     edited_md = dict()
     actual_data = set(track.keys())
-    print(f'\n{c_green}{file_title}{c_reset}')
+    print(f'\n{c.green}{file_title}{c.reset}')
 
     # getting data from user and editing the metadata of the current file
     for data in text:
@@ -69,7 +62,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         # validate current value
         tmp = features.validate_data(track, data)
 
-        print(f'{c_bright}{text[data]}{c_reset}{c_dim} ({tmp}): ', end='')
+        print(f'{c.bright}{text[data]}{c.reset}{c.dim} ({tmp}): ', end='')
         usr_input = input()
         if usr_input == '^':
             return dict(), True
@@ -108,7 +101,7 @@ def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bo
 
     for data in args:
         if args[data]:
-            print(f'{c_bright}Set the {data} for all next tracks: {c_reset}', end='')
+            print(f'{c.bright}Set the {data} for all next tracks: {c.reset}', end='')
             default[data] = input()
             ignored.add(data)
 
@@ -131,12 +124,12 @@ def parse_log():
     log_file = np('<default file not found>' if not files else max(files, key=os.path.getctime))
 
     # ask the path to the log file
-    print(f'{c_bright}Enter the absolute or relative path to the log file: {c_reset}{c_dim} ({log_file}): ', end='')
+    print(f'{c.bright}Enter the absolute or relative path to the log file: {c.reset}{c.dim} ({log_file}): ', end='')
     usr_input = input()
     log_file = np(usr_input) if usr_input else log_file
 
     if not os.path.exists(log_file):
-        print(f'{c_red}err: {c_reset}The log file wasn\'t found. Make sure that the correct path is specified.')
+        print(f'{c.red}err: {c.reset}The log file wasn\'t found. Make sure that the correct path is specified.')
         exit(1)
 
     # read log
@@ -159,7 +152,7 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
         current_path = np(os.path.join(path, file))
         # valid the path
         if not os.path.exists(current_path):
-            print(f'{c_red}warn: {c_reset}{current_path} doesn\'t exist. Try to run again.')
+            print(f'{c.red}warn: {c.reset}{current_path} doesn\'t exist. Try to run again.')
             continue
         track = EasyID3(current_path)
         actual_data = set(files[file].keys())
@@ -188,30 +181,6 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
             renamed[file] = file_name_tmp
 
     return renamed
-
-
-def create_logs(log: dict, renamed: dict):
-    """
-    Create json file and save the log in it
-
-    :param log: the data to be saved
-    :param renamed: dict like this: {'old_file_name.mp3': 'new_file_name.mp3'}
-    :return: None
-    """
-    file_name = datetime.today().isoformat('-').replace(':', '-').split('.')[0] + '.json'
-    log_path = np(config.LOG_PATH)
-    log_file_path = os.path.join(log_path, file_name)
-    if not os.path.isdir(log_path):
-        os.mkdir(log_path)
-
-    if renamed:
-        # rename the files in the log
-        log_tmp = {renamed[i]: log[i] for i in log}
-        log = log_tmp
-        del log_tmp
-
-    with open(log_file_path, 'w', encoding='utf-8') as write_file:
-        json.dump(log, write_file, ensure_ascii=False)
 
 
 def main():
@@ -252,9 +221,9 @@ def main():
 
     # create log file
     if (namespace.log or scan_mode) and not namespace.parse:
-        create_logs(log, renamed_files)
+        logger.create_logs(log, renamed_files)
 
-    print(f'{c_green}\nDone! Press [Enter] to exit')
+    print(f'{c.green}\nDone! Press [Enter] to exit')
     input()
 
 

@@ -1,5 +1,7 @@
 import argparse
 
+import colorama
+
 VERSION = {
     'major': 1,
     'minor': 3,
@@ -73,3 +75,13 @@ def set_parser():
     parser.add_argument('-D', '--date', action='store_true', default=False,
                         help='set a date for all tracks')
     return parser
+
+
+class ColorMethods:
+    def __init__(self):
+        colorama.init()
+        self.reset = colorama.Style.RESET_ALL
+        self.red = colorama.Fore.RED
+        self.green = colorama.Fore.GREEN
+        self.bright = colorama.Style.BRIGHT
+        self.dim = colorama.Style.DIM
