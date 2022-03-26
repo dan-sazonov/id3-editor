@@ -44,7 +44,13 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     file = np(file)
     file_title = os.path.split(file)[-1]
     text = config.LOCALE
+
     track = EasyID3(file)
+    # todo чекать наличие тегов, если нет - создаем пустой. вынести в отдельную функцию в файл с эксепшнами
+
+    # todo парсим genius
+    # todo сэйвим в буфер группа - трек
+
     edited_md = dict()
     actual_data = set(track.keys())
     print(f'\n{c.green}{file_title}{c.reset}')
@@ -62,6 +68,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         tmp = features.validate_data(track, data)
 
         print(f'{c.bright}{text[data]}{c.reset}{c.dim} ({tmp}): ', end='')
+        # todo стрипаем все упр символы
         usr_input = input()
         if usr_input == '^':
             return dict(), True
@@ -161,36 +168,36 @@ def main():
     """
     # get the CLI arguments
     cli_parser = config.set_parser()
-    namespace = cli_parser.parse_args(sys.argv[1:])
-    scan_mode = namespace.scan
-    log = logger.parse_log() if namespace.parse else dict()
+    cli_args = cli_parser.parse_args(sys.argv[1:])
+    scan_mode = cli_args.scan
+    log = logger.parse_log() if cli_args.parse else dict()
 
     # set the local variables
     renamed_files = False
     mp3_files, path = select_files()
-    default, ignored = set_defaults(namespace.title, namespace.artist, namespace.album, namespace.number,
-                                    namespace.genre, namespace.date)
+    default, ignored = set_defaults(cli_args.title, cli_args.artist, cli_args.album, cli_args.number,
+                                    cli_args.genre, cli_args.date)
 
-    if namespace.minimal:
+    if cli_args.minimal:
         ignored.update({'tracknumber', 'date'})
-    if namespace.copyright:
+    if cli_args.copyright:
         ignored.update(config.COPYRIGHT)
-    if not namespace.parse:
+    if not cli_args.parse:
         cur_index = 0
         while cur_index < len(mp3_files):
             file = mp3_files[cur_index]
             # ask for information about each file, fill in the log, or return to prev iteration
             file_title = os.path.split(file)[-1]
-            log[file_title], need_returns = (dict(), False) if namespace.delete else (dict(EasyID3(file)), False) \
-                if (scan_mode or namespace.auto_rename) else ask_user(file, default, ignored, namespace.copyright)
+            log[file_title], need_returns = (dict(), False) if cli_args.delete else (dict(EasyID3(file)), False) \
+                if (scan_mode or cli_args.auto_rename) else ask_user(file, default, ignored, cli_args.copyright)
             cur_index += -1 if need_returns else 1
 
     # edit the files
     if not scan_mode:
-        renamed_files = edit_files(log, path, namespace.delete, (namespace.rename or namespace.auto_rename))
+        renamed_files = edit_files(log, path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
 
     # create log file
-    if (namespace.log or scan_mode) and not namespace.parse:
+    if (cli_args.log or scan_mode) and not cli_args.parse:
         logger.create_logs(log, renamed_files)
 
     print(f'{c.green}\nDone! Press [Enter] to exit')
