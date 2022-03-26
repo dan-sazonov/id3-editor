@@ -1,4 +1,3 @@
-import json
 import os
 import sys
 
@@ -108,35 +107,6 @@ def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bo
     return default, ignored
 
 
-def parse_log():
-    """
-    Parse the json file with information about the file metadata
-
-    :return: dict: 'filename' : {'metadata': 'value'}
-    """
-
-    # find the later log file
-    log_path = np(config.LOG_PATH)
-    files = os.listdir(log_path)
-    files = [file for file in files if file.split('.')[-1] == 'json']
-    files = [np(os.path.join(log_path, file)) for file in files]
-    files = [file for file in files if os.path.isfile(file)]
-    log_file = np('<default file not found>' if not files else max(files, key=os.path.getctime))
-
-    # ask the path to the log file
-    print(f'{c.bright}Enter the absolute or relative path to the log file: {c.reset}{c.dim} ({log_file}): ', end='')
-    usr_input = input()
-    log_file = np(usr_input) if usr_input else log_file
-
-    if not os.path.exists(log_file):
-        print(f'{c.red}err: {c.reset}The log file wasn\'t found. Make sure that the correct path is specified.')
-        exit(1)
-
-    # read log
-    with open(log_file, 'r', encoding='utf-8') as read_file:
-        return json.load(read_file)
-
-
 def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
     """
     Set, edit or delete the metadata of the selected file and rename these files
@@ -193,7 +163,7 @@ def main():
     cli_parser = config.set_parser()
     namespace = cli_parser.parse_args(sys.argv[1:])
     scan_mode = namespace.scan
-    log = parse_log() if namespace.parse else dict()
+    log = logger.parse_log() if namespace.parse else dict()
 
     # set the local variables
     renamed_files = False
