@@ -1,17 +1,8 @@
-import config
-import os
 from datetime import date
+
 from mutagen.easyid3 import EasyID3
 
-
-def get_norm_path(s: str) -> str:
-    """
-    Normalize the path, replace slashes if necessary
-
-    :param s: the invalidated path
-    :return: correct path
-    """
-    return os.path.normpath(s)
+import config
 
 
 def get_new_filename(artist: str, title: str) -> str:

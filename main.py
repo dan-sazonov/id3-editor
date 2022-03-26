@@ -1,13 +1,15 @@
-import config
-import features
-import colorama
-import sys
-import os
 import json
+import os
+import sys
 from datetime import datetime
+
+import colorama
 from mutagen.easyid3 import EasyID3
 
-np = features.get_norm_path
+import config
+import features
+
+np = os.path.normpath
 
 colorama.init()
 c_reset = colorama.Style.RESET_ALL
