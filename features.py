@@ -2,6 +2,8 @@ import mutagen
 import pyperclip
 from mutagen.easyid3 import EasyID3
 
+import validator
+
 
 def get_new_filename(artist: str, title: str) -> str:
     """
@@ -29,7 +31,7 @@ def get_track_title(track: EasyID3) -> list[str, str]:
     clip = []
     for data in 'artist', 'title':
         if data in track.keys():
-            clip.append(track[data][0])
+            clip.append(validator.remove_brackets(track[data][0]))
         else:
             clip.append('')
     return clip
