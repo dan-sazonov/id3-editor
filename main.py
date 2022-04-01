@@ -50,10 +50,11 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     # todo чекать наличие тегов, если нет - создаем пустой. вынести в отдельную функцию в файл с эксепшнами
 
     # todo парсим genius
-    # todo сэйвим в буфер группа - трек
 
     edited_md = dict()
     actual_data = set(track.keys())
+
+    features.copy_track_title(track)    # copy the title of this track to the clipboard
     print(f'\n{c.green}{file_title}{c.reset}')
 
     # getting data from user and editing the metadata of the current file
