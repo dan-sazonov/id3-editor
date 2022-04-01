@@ -23,12 +23,14 @@ def get_track_title(track: EasyID3) -> list[str, str]:
     Get artist and title from the track
 
     :param track: mutagen object, metadata of this track
-    :return: list[artist, title]
+    :return: list[artist, title]. Artist and title will be the empty strings if the track hasn't such tags
     """
     clip = []
     for data in 'artist', 'title':
         if data in track.keys():
             clip.append(track[data][0])
+        else:
+            clip.append('')
     return clip
 
 
