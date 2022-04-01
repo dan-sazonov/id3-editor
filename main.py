@@ -5,8 +5,8 @@ from mutagen.easyid3 import EasyID3
 
 import config
 import features
-import validator
 import logger
+import validator
 
 np = os.path.normpath
 c = config.ColorMethods()
@@ -45,16 +45,14 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     file = np(file)
     file_title = os.path.split(file)[-1]
     text = config.LOCALE
-
-    track = EasyID3(file)
-    # todo чекать наличие тегов, если нет - создаем пустой. вынести в отдельную функцию в файл с эксепшнами
+    track = features.get_id3(file)
 
     # todo парсим genius
 
     edited_md = dict()
     actual_data = set(track.keys())
 
-    features.copy_track_title(track)    # copy the title of this track to the clipboard
+    features.copy_track_title(track)  # copy the title of this track to the clipboard
     print(f'\n{c.green}{file_title}{c.reset}')
 
     # getting data from user and editing the metadata of the current file
@@ -133,7 +131,8 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
         if not os.path.exists(current_path):
             print(f'{c.red}warn: {c.reset}{current_path} doesn\'t exist. Try to run again.')
             continue
-        track = EasyID3(current_path)
+
+        track = features.get_id3(current_path)
         actual_data = set(files[file].keys())
 
         # set or edit metadata

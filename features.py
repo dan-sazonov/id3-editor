@@ -1,3 +1,4 @@
+import mutagen
 import pyperclip
 from mutagen.easyid3 import EasyID3
 
@@ -44,3 +45,13 @@ def copy_track_title(track: EasyID3) -> None:
     artist, title = get_track_title(track)
     clip = f'{artist} - {title}'
     pyperclip.copy(clip)
+
+
+def get_id3(file):
+    try:
+        track = EasyID3(file)
+    except mutagen.MutagenError:
+        track = mutagen.File(file, easy=True)
+        track.add_tags()
+
+    return track
