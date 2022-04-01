@@ -47,8 +47,6 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     text = config.LOCALE
     track = features.get_id3(file)
 
-    # todo парсим genius
-
     edited_md = dict()
     actual_data = set(track.keys())
 
