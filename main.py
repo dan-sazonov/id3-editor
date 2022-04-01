@@ -5,6 +5,7 @@ from mutagen.easyid3 import EasyID3
 
 import config
 import features
+import validator
 import logger
 
 np = os.path.normpath
@@ -65,14 +66,14 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
             continue
 
         # validate current value
-        tmp = features.validate_data(track, data)
+        tmp = validator.validate_data(track, data)
 
         print(f'{c.bright}{text[data]}{c.reset}{c.dim} ({tmp}): ', end='')
         # todo стрипаем все упр символы
         usr_input = input()
         if usr_input == '^':
             return dict(), True
-        edited_md[data] = [features.validate_input(data, usr_input)] if usr_input else [tmp]
+        edited_md[data] = [validator.validate_input(data, usr_input)] if usr_input else [tmp]
 
     # leave information about the copyright holder
     if leave_copy:
@@ -143,7 +144,7 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
             for i in config.LEAVE_THIS_DATA:
                 if i in track.keys():
                     actual_data.add(i)
-                    track[i] = [features.validate_data(track, i)]
+                    track[i] = [validator.validate_data(track, i)]
 
         # delete ignored metadata
         for del_data in track:
