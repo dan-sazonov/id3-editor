@@ -72,6 +72,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         if usr_input == '^':
             return dict(), True
 
+        # parse the album title from genius.com
         if config.ENABLE_PARSER and data == 'album' and usr_input == '!':
             album = get_album_title(edited_md["artist"][0], edited_md["title"][0])
             if not album:
