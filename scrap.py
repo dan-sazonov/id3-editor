@@ -10,9 +10,8 @@ def get_album_title(band, artist):
     soup = BeautifulSoup(response.text, 'lxml')
 
     ans = soup.select('[href="#primary-album"]')
-    return '' if not ans else ans[0].text
+    return '' if not ans else ans[0].text.split(' (')[0]
 
-# todo стрипать все что в скобках
 # todo переводить с русского название трека и группу
 
 
