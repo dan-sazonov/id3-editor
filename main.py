@@ -7,6 +7,7 @@ import config
 import features
 import logger
 import validator
+from scrap import get_album_title
 
 np = os.path.normpath
 c = config.ColorMethods()
@@ -70,6 +71,16 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         usr_input = input()
         if usr_input == '^':
             return dict(), True
+
+        if config.ENABLE_PARSER and data == 'album' and usr_input == '!':
+            album = get_album_title(edited_md["artist"][0], edited_md["title"][0])
+            if not album:
+                print(f'{c.red}warn: {c.reset} incorrect data, or Genius doesn\'t have this track. '
+                      f'"{tmp}" will be applied')
+                usr_input = ''
+            else:
+                usr_input = album
+
         edited_md[data] = [validator.validate_input(data, usr_input)] if usr_input else [tmp]
 
     # leave information about the copyright holder
