@@ -8,11 +8,13 @@ def get_album_title(band, artist):
     url = f'https://genius.com/{band}-{artist}-lyrics'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'lxml')
-    return soup.select('[href="#primary-album"]')[0].text
+
+    ans = soup.select('[href="#primary-album"]')
+    return '' if not ans else ans[0].text
 
 # todo стрипать все что в скобках
 # todo переводить с русского название трека и группу
-# todo ловить исключения, логги и фоллбэки
+
 
 if __name__ == '__main__':
     tracks = [('Blink-182', 'What’s My Age Again?'), ('saypink!', 'AND I WANT')]
