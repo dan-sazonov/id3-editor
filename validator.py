@@ -16,6 +16,20 @@ def remove_brackets(s: str) -> str:
     return s.split(split_symbol)[index].strip(' ')
 
 
+def validate_for_url(data: tuple) -> list:
+    """
+    Remove all symbols and replace spaces with '-' in the strings of tuple
+
+    :param data: tuple with str
+    :return: list with formatted strings
+    """
+    arr = list(data)
+    for s in range(len(arr)):
+        arr[s] = arr[s].replace(' ', '-')
+        arr[s] = ''.join(i if i.isalnum() or i == '-' else '' for i in arr[s])
+    return arr
+
+
 def validate_year(year: str) -> str:
     """
     Validate the value of year

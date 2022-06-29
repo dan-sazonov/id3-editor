@@ -4,17 +4,22 @@ import colorama
 
 VERSION = {
     'major': 1,
-    'minor': 3,
+    'minor': 5,
     'micro': 0
 }
 
 AUTHOR = 'Dan Sazonov'
 
+# if True, beta mode will be enabled
+ENABLE_PARSER = True
+
 # 'metadata key': 'text for CLI'
+# don't change the keys! values could be translated to other languages
 LOCALE = {
     'title': 'Title',
     'artist': 'Artist',
-    'album': 'Album',
+    'album': f'Album'
+             f'{" <if you need to parse the value from Genius, enter [!]>" if ENABLE_PARSER else ""}',
     'tracknumber': 'Number of this track',
     'genre': 'Genre',
     'date': 'Year of release'
