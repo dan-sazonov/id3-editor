@@ -5,7 +5,7 @@ import colorama
 VERSION = {
     'major': 1,
     'minor': 5,
-    'micro': 0
+    'micro': 1
 }
 
 AUTHOR = 'Dan Sazonov'
@@ -14,7 +14,7 @@ AUTHOR = 'Dan Sazonov'
 ENABLE_PARSER = True
 
 # if True, dev mode will be enabled
-DEV_MODE = True
+DEV_MODE = False
 
 # 'metadata key': 'text for CLI'
 # don't change the keys! values could be translated to other languages
