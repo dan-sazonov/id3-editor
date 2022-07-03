@@ -70,7 +70,7 @@ def validate_data(track: EasyID3, data: str):
     """
     try:
         value = track[data][0]
-    except KeyError:
+    except KeyError or IndexError:
         return ''
 
     if data == 'date':
