@@ -67,7 +67,6 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         tmp = validator.validate_data(track, data)
 
         print(f'{c.bright}{text[data]}{c.reset}{c.dim} ({tmp}): ', end='')
-        # todo стрипаем все упр символы
         usr_input = input()
         if usr_input == '^':
             return dict(), True
