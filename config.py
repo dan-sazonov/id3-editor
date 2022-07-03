@@ -10,8 +10,11 @@ VERSION = {
 
 AUTHOR = 'Dan Sazonov'
 
-# if True, beta mode will be enabled
+# if True, parser will be enabled
 ENABLE_PARSER = True
+
+# if True, dev mode will be enabled
+DEV_MODE = True
 
 # 'metadata key': 'text for CLI'
 # don't change the keys! values could be translated to other languages

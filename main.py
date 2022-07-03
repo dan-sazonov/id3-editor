@@ -21,7 +21,7 @@ def select_files():
     """
     files = []
     print(f'{c.bright}Enter the absolute or relative path to directory: {c.reset}', end='')
-    working_dir = np(input())
+    working_dir = './drafts' if config.DEV_MODE else np(input())
 
     if not os.path.exists(working_dir):
         print(f'{c.red}err: {c.reset}incorrect path. Try again.')
