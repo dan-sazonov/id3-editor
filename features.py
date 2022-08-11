@@ -5,7 +5,7 @@ from mutagen.easyid3 import EasyID3
 import validator
 
 
-def get_new_filename(artist: str, title: str) -> str:
+def get_new_filename(artist: str, title: str, number=0) -> str:
     """
     Get new filename for the track. Remove all symbols, replace spaces with underscores
 
@@ -18,7 +18,7 @@ def get_new_filename(artist: str, title: str) -> str:
     for data in [artist, title]:
         tmp_data.append(''.join([i.lower() if i != ' ' else '_' for i in data if i.isalnum() or i == ' ']))
 
-    return '{0}-{1}.mp3'.format(*tmp_data)
+    return '{0}-{1} ({2}).mp3'.format(*tmp_data, number) if number else '{0}-{1}.mp3'.format(*tmp_data)
 
 
 def get_track_title(track: EasyID3) -> list[str, str]:

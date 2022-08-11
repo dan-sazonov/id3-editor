@@ -169,7 +169,16 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
         track.save()
         if do_rename:
             file_name_tmp = features.get_new_filename(track['artist'][0], track['title'][0])
-            os.rename(current_path, np(f'{path}/{file_name_tmp}'))
+
+            try:
+                os.rename(current_path, np(f'{path}/{file_name_tmp}'))
+            except FileExistsError:
+                number = 0
+                while os.path.exists(np(f'{path}/{file_name_tmp}')):
+                    number += 1
+                    file_name_tmp = features.get_new_filename(track['artist'][0], track['title'][0], number)
+                os.rename(current_path, np(f'{path}/{file_name_tmp}'))
+
             renamed[file] = file_name_tmp
 
     return renamed
