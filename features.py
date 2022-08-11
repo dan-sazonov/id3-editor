@@ -9,6 +9,7 @@ def get_new_filename(artist: str, title: str, number=0) -> str:
     """
     Get new filename for the track. Remove all symbols, replace spaces with underscores
 
+    :param number: amount of the same files. if NOT 0 is got, this number will be added to the end of the filename
     :param artist: artist of this track
     :param title: title of this track
     :return: new filename looks like 'artist-file_name'
@@ -49,7 +50,13 @@ def copy_track_title(track: EasyID3) -> None:
     pyperclip.copy(clip)
 
 
-def get_id3(file):
+def get_id3(file: str) -> EasyID3:
+    """
+    Add id3 attributes to the empty mp3 file
+
+    :param file: path to the mp3 file
+    :return: the same file with empty metadata attributes
+    """
     try:
         track = EasyID3(file)
     except mutagen.MutagenError:
