@@ -55,7 +55,11 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     print(f'\n{c.green}{file_title}{c.reset}')
 
     # getting data from user and editing the metadata of the current file
-    for data in text:
+    i = 0
+    while i < len(text):
+        data = list(text.keys())[i]
+        i += 1
+
         if data in default:
             edited_md[data] = [default[data]]
         if data in ignore:
@@ -75,9 +79,10 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         if config.ENABLE_PARSER and data == 'album' and usr_input == '!':
             album = get_album_title(edited_md["artist"][0], edited_md["title"][0])
             if not album:
-                print(f'{c.red}warn: {c.reset} incorrect data, or Genius doesn\'t have this track. '
-                      f'"{tmp}" will be applied')
-                usr_input = ''
+                print(f'{c.red}warn: {c.reset} incorrect data, or Genius doesn\'t have this track. ')
+                i -= 1
+                continue
+
             else:
                 usr_input = album
 
