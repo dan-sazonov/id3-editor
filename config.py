@@ -14,7 +14,7 @@ AUTHOR = 'Dan Sazonov'
 ENABLE_PARSER = True
 
 # if True, dev mode will be enabled
-DEV_MODE = True
+DEV_MODE = not True
 
 # 'metadata key': 'text for CLI'
 # don't change the keys! values could be translated to other languages
