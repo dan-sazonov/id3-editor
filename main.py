@@ -21,7 +21,7 @@ def select_files():
     """
     files = []
     print(f'{c.bright}Enter the absolute or relative path to directory: {c.reset}', end='')
-    working_dir = np(input())
+    working_dir = './drafts' if config.DEV_MODE else np(input())
 
     if not os.path.exists(working_dir):
         print(f'{c.red}err: {c.reset}incorrect path. Try again.')
@@ -55,7 +55,11 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     print(f'\n{c.green}{file_title}{c.reset}')
 
     # getting data from user and editing the metadata of the current file
-    for data in text:
+    i = 0
+    while i < len(text):
+        data = list(text.keys())[i]
+        i += 1
+
         if data in default:
             edited_md[data] = [default[data]]
         if data in ignore:
@@ -67,7 +71,6 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         tmp = validator.validate_data(track, data)
 
         print(f'{c.bright}{text[data]}{c.reset}{c.dim} ({tmp}): ', end='')
-        # todo стрипаем все упр символы
         usr_input = input()
         if usr_input == '^':
             return dict(), True
@@ -76,9 +79,10 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         if config.ENABLE_PARSER and data == 'album' and usr_input == '!':
             album = get_album_title(edited_md["artist"][0], edited_md["title"][0])
             if not album:
-                print(f'{c.red}warn: {c.reset} incorrect data, or Genius doesn\'t have this track. '
-                      f'"{tmp}" will be applied')
-                usr_input = ''
+                print(f'{c.red}warn: {c.reset} incorrect data, or Genius doesn\'t have this track. ')
+                i -= 1
+                continue
+
             else:
                 usr_input = album
 
@@ -165,7 +169,16 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
         track.save()
         if do_rename:
             file_name_tmp = features.get_new_filename(track['artist'][0], track['title'][0])
-            os.rename(current_path, np(f'{path}/{file_name_tmp}'))
+
+            try:
+                os.rename(current_path, np(f'{path}/{file_name_tmp}'))
+            except FileExistsError:
+                number = 0
+                while os.path.exists(np(f'{path}/{file_name_tmp}')):
+                    number += 1
+                    file_name_tmp = features.get_new_filename(track['artist'][0], track['title'][0], number)
+                os.rename(current_path, np(f'{path}/{file_name_tmp}'))
+
             renamed[file] = file_name_tmp
 
     return renamed

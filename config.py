@@ -1,17 +1,21 @@
 import argparse
+import os
 
 import colorama
 
 VERSION = {
     'major': 1,
     'minor': 5,
-    'micro': 0
+    'micro': 1
 }
 
 AUTHOR = 'Dan Sazonov'
 
-# if True, beta mode will be enabled
+# if True, parser will be enabled
 ENABLE_PARSER = True
+
+# if True, dev mode will be enabled
+DEV_MODE = os.getenv('DEV_MODE') == '1' or os.getenv('DEV_MODE').lower() == 'true'
 
 # 'metadata key': 'text for CLI'
 # don't change the keys! values could be translated to other languages

@@ -105,6 +105,8 @@ def validate_input(data: str, value: str):
     if config.SKIP_VALIDATION:
         return value
 
+    value = value.strip('\xa0').strip('\t').strip('\n')
+
     if data in {'title', 'artist', 'album'}:
         return replace_umlauts(value)
     elif data == 'date':
