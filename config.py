@@ -15,7 +15,7 @@ AUTHOR = 'Dan Sazonov'
 ENABLE_PARSER = True
 
 # if True, dev mode will be enabled
-DEV_MODE = os.getenv('DEV_MODE') == '1' or os.getenv('DEV_MODE').lower() == 'true'
+DEV_MODE = os.getenv('DEV_MODE') == '1' or os.getenv('DEV_MODE'.lower()) == 'true'
 
 # 'metadata key': 'text for CLI'
 # don't change the keys! values could be translated to other languages
