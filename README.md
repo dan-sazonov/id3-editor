@@ -22,23 +22,26 @@ The easiest way to start is just:
 ```
 $ python3 main.py
 ```
-After that, you will be asked to enter the path to directory where the tracks need to be edited. Then change the value of each parameter for each file. If you want to
-apply the value from the brackets, just press [Enter]. It looks like this:
+After that, the program will ask for the path to the directory where the tracks need to be edited. Then change the value of each parameter
+for each file. If you want to apply the value from the brackets, press \[Enter\]. You can use a parser to search for the album name. Just enter \[\!] instead of the album name. Also, the name of the band and track are copied to the clipboard. It looks like this:
+
 <p align="center"><img src="./img/demo1.png" width="555" height="253"></p>
 
 <h3>Default Parameters</h3>
+
 If there is a same values for each tracks in this folder, you can predefine it by specifying one of the flags when starting the program (see below). The value of this
 parameter will be asked once at start, and will be applied to all tracks. It looks like this:
+
 <p align="center"><img src="./img/demo2.png" width="556" height="373"></p>
 <details> 
   <summary><b>Flags:</b></summary>
   <ul>
-    <li><code>'-T', '--title'</code> - set a title for all tracks;</li>
-    <li><code>'-R', '--artist'</code> - set an artist for all tracks;</li>
-    <li><code>'-A', '--album'</code> - set an album for all tracks;</li>
-    <li><code>'-N', '--number'</code> - set a number for all tracks;</li>
-    <li><code>'-G', '--genre'</code> - set a genre for all tracks;</li>
-    <li><code>'-D', '--date'</code> - set a date for all tracks.</li>
+    <li><code>'-T', '--title'</code> - title for all tracks;</li>
+    <li><code>'-R', '--artist'</code> - artist for all tracks;</li>
+    <li><code>'-A', '--album'</code> - album for all tracks;</li>
+    <li><code>'-N', '--number'</code> - number for all tracks;</li>
+    <li><code>'-G', '--genre'</code> - genre for all tracks;</li>
+    <li><code>'-D', '--date'</code> - date for all tracks.</li>
   </ul>
 </details>
 
@@ -65,6 +68,7 @@ create a json file with the unchanged metadata, then you edit them and apply it 
 - You can run the program in minimal mode with `-m` or `--minimal` flag. It will only ask for title, artist, album and genre. Other data will be cleared.
 - Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag. Please note that the information in the logs will be associated with the new name.
 - You can also rename all files without changing the metadata. Run the program with the `--auto_rename` flag. Don't use other flags with this.
+- If there are several files with the same name, a number in parentheses will be added to the end of it
 - To remove all data from the tracks, run the program with the `-d` or `--delete` flag. Any other flags will be ignored.
 - If you need to go back to editing the previous track in the interactive mode, enter the `^` character in any field.
 - In interactive mode, two colons after the letters _a_, _o_ or _u_ will be replaced with this letter with an umlaut. For example, `Mo::tley Cru::e` will be replaced by `Mötley Crüe`.

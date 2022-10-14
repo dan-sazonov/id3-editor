@@ -15,6 +15,7 @@ AUTHOR = 'Dan Sazonov'
 ENABLE_PARSER = True
 
 # if True, dev mode will be enabled
+# abandon hope, everyone who enters here
 DEV_MODE = os.getenv('DEV_MODE') == '1' or os.getenv('DEV_MODE'.lower()) == 'true'
 
 # 'metadata key': 'text for CLI'
@@ -37,7 +38,7 @@ COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}
 
 # if True, the data from the LEAVE_THIS_DATA will remain unchanged
 LEAVE_SOME_DATA = False
-LEAVE_THIS_DATA = ['tracknumber', 'date']  # don't change it!
+LEAVE_THIS_DATA = ['tracknumber', 'date']  # don't change it! (v 1.5.1: but why???)
 
 # if True, the data entered by user won't be validated
 SKIP_VALIDATION = False
