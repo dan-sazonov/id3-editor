@@ -196,6 +196,8 @@ def main():
     scan_mode = cli_args.scan
     log = logger.parse_log() if cli_args.parse else dict()
 
+    logger.create_log()
+
     # set the local variables
     mp3_files, path = select_files()
     default, ignored = set_defaults(cli_args.title, cli_args.artist, cli_args.album, cli_args.number,
@@ -211,11 +213,12 @@ def main():
             file = mp3_files[cur_index]
             # ask for information about each file, fill in the log, or return to prev iteration
             file_title = os.path.split(file)[-1]
-            log[file_title], need_returns = (dict(), False) if cli_args.delete else (dict(EasyID3(file)), False) \
+            tmp_log, need_returns = (dict(), False) if cli_args.delete else (dict(EasyID3(file)), False) \
                 if (scan_mode or cli_args.auto_rename) else ask_user(file, default, ignored, cli_args.copyright)
             cur_index += -1 if need_returns else 1
 
-            logger.update_log(log, cli_args.rename)
+            logger.update_log(file_title, tmp_log)
+            log[file_title] = tmp_log
 
     # edit the files
     if not scan_mode:

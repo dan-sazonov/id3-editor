@@ -34,11 +34,13 @@ def create_log():
     features.write_json(log_file_path)
 
 
-def update_log(log: dict):
-    # todo закидывает текущий трек в лог
+def update_log(file, log: dict):
     log_file = _get_log_file()
-    do_rename = cli.cli_args.rename or cli.cli_args.auto_rename
+    # do_rename = cli.cli_args.rename or cli.cli_args.auto_rename
     cur_log = features.read_json(log_file)
+
+    cur_log[file] = log
+    features.write_json(log_file, cur_log)
 
 
 def rm_log():
