@@ -193,7 +193,7 @@ def main():
     """
     # get the CLI arguments
     cli_args = cli.cli_args
-    scan_mode = cli_args.scan
+    scan_mode = cli.scan_mode
     log = logger.parse_log() if cli_args.parse else dict()
 
     logger.create_log()
@@ -231,6 +231,9 @@ def main():
     # if (cli_args.log or scan_mode) and not cli_args.parse:
     #     logger.create_logs(log, renamed_files)
     #     print(log, renamed_files)
+
+    if not cli.leave_log:
+        logger.rm_log()
 
     print(f'{c.green}\nDone! Press [Enter] to exit')
     input()
