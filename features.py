@@ -70,7 +70,7 @@ def get_id3(file: str) -> EasyID3:
     return track
 
 
-def write_json(file_name: str, content: dict) -> None:
+def write_json(file_name: str, content=None) -> None:
     """
     Write content to the 'file_name.json'. If the file doesn't exist it will be created
 
@@ -78,6 +78,9 @@ def write_json(file_name: str, content: dict) -> None:
     :param content: dict with the json-data
     :return: None
     """
+    if content is None:
+        content = {}
+
     with open(file_name, 'w+', encoding='utf-8') as write_file:
         json.dump(content, write_file, ensure_ascii=False)
 
@@ -90,7 +93,7 @@ def read_json(file_name: str) -> dict:
     :return: dict with the content
     """
     if not os.path.exists(file_name):
-        write_json(file_name, {})
+        write_json(file_name)
 
     with open(file_name, 'r', encoding='utf-8') as read_file:
         return json.load(read_file)
