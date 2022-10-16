@@ -1,8 +1,14 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup
 from deep_translator import GoogleTranslator
 
 from validator import validate_for_url
+
+
+def _has_cyrillic(text):
+    return bool(re.search('[\u0400-\u04FF]', text))
 
 
 def _translate(s: str) -> str:
@@ -12,7 +18,8 @@ def _translate(s: str) -> str:
     :param s: string in any languages
     :return: string in English
     """
-    return GoogleTranslator(source='auto', target='en').translate(s)
+
+    return s if not _has_cyrillic(s) else GoogleTranslator(source='auto', target='en').translate(s)
 
 
 def get_album_title(artist, track):
