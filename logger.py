@@ -48,7 +48,7 @@ def parse_log():
     log_file = np('<default file not found>' if not files else max(files, key=os.path.getctime))
 
     # ask the path to the log file
-    print(f'{c.bright}Enter the absolute or relative path to the log file: {c.reset}{c.dim} ({log_file}): ', end='')
+    print(f'{c.bright}Enter the absolute or relative path to the log file {c.reset}{c.dim} ({log_file}): ', end='')
     usr_input = input()
     log_file = np(usr_input) if usr_input else log_file
 
