@@ -41,10 +41,14 @@ def parse_log():
 
     # find the later log file
     log_path = np(config.LOG_PATH)
-    files = os.listdir(log_path)
-    files = [file for file in files if file.split('.')[-1] == 'json']
-    files = [np(os.path.join(log_path, file)) for file in files]
-    files = [file for file in files if os.path.isfile(file)]
+    files = []
+
+    if os.path.exists(log_path):
+        files = os.listdir(log_path)
+        files = [file for file in files if file.split('.')[-1] == 'json']
+        files = [np(os.path.join(log_path, file)) for file in files]
+        files = [file for file in files if os.path.isfile(file)]
+
     log_file = np('<default file not found>' if not files else max(files, key=os.path.getctime))
 
     # ask the path to the log file
