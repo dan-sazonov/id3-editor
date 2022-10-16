@@ -33,14 +33,13 @@ def select_files():
     return files, working_dir
 
 
-def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
+def ask_user(file: str, default: dict, ignore: set):
     """
     Ask the user for new metadata values
 
     :param file: the file to edit
     :param default: predefined metadata values
     :param ignore: other metadata values to leave unchanged
-    :param leave_copy: bool, True, if you need to leave copyright information
     :return: dict with pairs 'metadata': 'value'; bool var: True, if you need to return to the prev iteration
     """
     file = np(file)
@@ -89,7 +88,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         edited_md[data] = [validator.validate_input(data, usr_input)] if usr_input else [tmp]
 
     # leave information about the copyright holder
-    if leave_copy:
+    if cli.leave_copy:
         for data in config.COPYRIGHT:
             if data in actual_data:
                 edited_md[data] = track[data][0]
@@ -97,19 +96,14 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     return edited_md, False
 
 
-def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bool, date: bool):
+def set_defaults():
     """
     Ask the user for the values that need to be set for all files
 
-    :param title: True, if you need to leave the title
-    :param artist: True, if you need to leave the artist
-    :param album: True, if you need to leave the album
-    :param number: True, if you need to leave the number
-    :param genre: True, if you need to leave the genre
-    :param date: True, if you need to leave the date
     :return: default: dict with pairs 'metadata': 'predefined value';
              ignored: set with data that should be ignored in ask_user
     """
+    title, artist, album, number, genre, date = cli.default
     default = dict()
     ignored = set()
     args = {'title': title,
@@ -128,13 +122,11 @@ def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bo
     return default, ignored
 
 
-def edit_files(path: str, clear_all: bool, do_rename: bool):
+def edit_files(path: str):
     """
     Set, edit or delete the metadata of the selected file and rename these files
 
     :param path: the directory where these files are located
-    :param clear_all: True, if you need to remove all the metadata
-    :param do_rename: True, if you need to rename files in the form of artist-track_title
     :return: None
     """
     renamed = dict()
@@ -162,12 +154,12 @@ def edit_files(path: str, clear_all: bool, do_rename: bool):
 
         # delete ignored metadata
         for del_data in track:
-            if del_data not in actual_data or clear_all:
+            if del_data not in actual_data or cli.del_mode:
                 del track[del_data]
 
         # save metadata and rename file
         track.save()
-        if do_rename:
+        if cli.do_rename or cli.rename_mode:
             file_name_tmp = features.get_new_filename(track)
 
             try:
@@ -194,7 +186,7 @@ def main():
 
     # set the local variables
     mp3_files, path = select_files()
-    default, ignored = set_defaults(*cli.default)
+    default, ignored = set_defaults()
 
     if cli.min_mode:
         ignored.update({'tracknumber', 'date'})
@@ -208,7 +200,7 @@ def main():
             file_title = os.path.split(file)[-1]
 
             tmp_log, need_returns = (dict(), False) if cli.del_mode else (dict(EasyID3(file)), False) \
-                if (cli.scan_mode or cli.rename_mode) else ask_user(file, default, ignored, cli.leave_copy)
+                if (cli.scan_mode or cli.rename_mode) else ask_user(file, default, ignored)
             cur_index += -1 if need_returns else 1
 
             logger.update_log(file_title, tmp_log)
@@ -218,7 +210,7 @@ def main():
 
     # edit the files
     if not cli.scan_mode:
-        edit_files(path, cli.del_mode, (cli.do_rename or cli.rename_mode))
+        edit_files(path)
 
     if cli.do_rename:
         logger.rename_logs_titles()
