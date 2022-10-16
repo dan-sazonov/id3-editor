@@ -1,8 +1,9 @@
-import json
 import os
 from datetime import datetime
 
+import cli
 import config
+import features
 
 np = os.path.normpath
 c = config.ColorMethods()
@@ -30,22 +31,14 @@ def create_log():
 
     if not os.path.isdir(log_path):
         os.mkdir(log_path)
-    open(log_file_path, 'a').close()
+    features.write_json(log_file_path)
 
 
-def update_log(log: dict, renamed: dict):
-    # закидывает текущий трек в лог
+def update_log(log: dict):
+    # todo закидывает текущий трек в лог
     log_file = _get_log_file()
-
-    if renamed:
-        # дергаем гет нью от
-        # rename the files in the log
-        log_tmp = {renamed[i]: log[i] for i in log}
-        log = log_tmp
-        del log_tmp
-
-    with open(log_file, 'w', encoding='utf-8') as write_file:
-        json.dump(log, write_file, ensure_ascii=False)
+    do_rename = cli.cli_args.rename or cli.cli_args.auto_rename
+    cur_log = features.read_json(log_file)
 
 
 def rm_log():
@@ -74,5 +67,4 @@ def parse_log():
         exit(1)
 
     # read log
-    with open(log_file, 'r', encoding='utf-8') as read_file:
-        return json.load(read_file)
+    return features.write_json(log_file)
