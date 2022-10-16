@@ -129,17 +129,17 @@ def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bo
     return default, ignored
 
 
-def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
+def edit_files(path: str, clear_all: bool, do_rename: bool):
     """
     Set, edit or delete the metadata of the selected file and rename these files
 
-    :param files: information from user about the metadata of each file
     :param path: the directory where these files are located
     :param clear_all: True, if you need to remove all the metadata
     :param do_rename: True, if you need to rename files in the form of artist-track_title
     :return: None
     """
     renamed = dict()
+    files = logger.get_last_log()
     for file in files:
         current_path = np(os.path.join(path, file))
         # valid the path
@@ -194,7 +194,6 @@ def main():
     # get the CLI arguments
     cli_args = cli.cli_args
     scan_mode = cli.scan_mode
-    log = logger.parse_log() if cli_args.parse else dict()
 
     logger.create_log()
 
@@ -218,11 +217,10 @@ def main():
             cur_index += -1 if need_returns else 1
 
             logger.update_log(file_title, tmp_log)
-            log[file_title] = tmp_log
 
     # edit the files
     if not scan_mode:
-        edit_files(log, path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
+        edit_files(path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
 
     if cli.do_rename:
         logger.rename_logs_titles()

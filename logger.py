@@ -22,6 +22,10 @@ def _get_log_file():
     return max(files, key=os.path.getctime)
 
 
+def get_last_log():
+    return features.read_json(_get_log_file())
+
+
 def create_log():
     # создает лог
     file_name = datetime.today().isoformat('-').replace(':', '-').split('.')[0] + '.json'
