@@ -224,6 +224,9 @@ def main():
     if not scan_mode:
         edit_files(log, path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
 
+    if cli.do_rename:
+        logger.rename_logs_titles()
+
     # create log file
     # if (cli_args.log or scan_mode) and not cli_args.parse:
     #     logger.create_logs(log, renamed_files)

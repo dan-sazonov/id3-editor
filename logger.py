@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 
-import cli
 import config
 import features
 
@@ -36,11 +35,29 @@ def create_log():
 
 def update_log(file, log: dict):
     log_file = _get_log_file()
-    # do_rename = cli.cli_args.rename or cli.cli_args.auto_rename
     cur_log = features.read_json(log_file)
 
     cur_log[file] = log
     features.write_json(log_file, cur_log)
+
+
+def rename_logs_titles():
+    log_file = _get_log_file()
+    cur_log = features.read_json(log_file)
+    new_log = dict()
+
+    for i in cur_log:
+        title = features.get_new_filename(cur_log[i])
+
+        number = 0
+        while title in cur_log.keys():
+            number += 1
+            title = f'{title.split(" (")[0]} ({number})'
+
+        new_log[title] = cur_log[i]
+
+    features.write_json(log_file, new_log)
+    print(new_log)
 
 
 def rm_log():
