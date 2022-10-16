@@ -19,7 +19,7 @@ def _get_log_file():
         files = [np(os.path.join(log_path, file)) for file in files]
         files = [file for file in files if os.path.isfile(file)]
 
-    return max(files, key=os.path.getctime)
+    return '' if not files else max(files, key=os.path.getctime)
 
 
 def get_last_log():
@@ -61,12 +61,14 @@ def rename_logs_titles():
         new_log[title] = cur_log[i]
 
     features.write_json(log_file, new_log)
-    print(new_log)
 
 
 def rm_log():
     # убивает рабочий лог
-    os.remove(_get_log_file())
+    path = _get_log_file()
+    if not path:
+        return
+    os.remove(path)
 
 
 def parse_log():
@@ -75,6 +77,7 @@ def parse_log():
 
     :return: dict: 'filename' : {'metadata': 'value'}
     """
+    rm_log()
 
     # find the later log file
     log_file = _get_log_file()
@@ -89,5 +92,4 @@ def parse_log():
         print(f'{c.red}err: {c.reset}The log file wasn\'t found. Make sure that the correct path is specified.')
         exit(1)
 
-    # read log
-    return features.write_json(log_file)
+    features.read_json(log_file)

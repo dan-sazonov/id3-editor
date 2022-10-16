@@ -218,6 +218,9 @@ def main():
 
             logger.update_log(file_title, tmp_log)
 
+    if cli.parse_mode:
+        logger.parse_log()
+
     # edit the files
     if not scan_mode:
         edit_files(path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
@@ -228,7 +231,7 @@ def main():
     print(f'{c.green}\nDone! Press [Enter] to exit')
     input()
 
-    if cli.leave_log or cli.scan_mode:
+    if cli.leave_log or cli.scan_mode or cli.parse_mode:
         return
     logger.rm_log()
 
