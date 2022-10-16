@@ -190,30 +190,25 @@ def main():
 
     :return: None
     """
-    # get the CLI arguments
-    cli_args = cli.cli_args
-    scan_mode = cli.scan_mode
-
     logger.create_log()
 
     # set the local variables
     mp3_files, path = select_files()
-    default, ignored = set_defaults(cli_args.title, cli_args.artist, cli_args.album, cli_args.number,
-                                    cli_args.genre, cli_args.date)
+    default, ignored = set_defaults(*cli.default)
 
-    if cli_args.minimal:
+    if cli.min_mode:
         ignored.update({'tracknumber', 'date'})
-    if cli_args.copyright:
+    if cli.leave_copy:
         ignored.update(config.COPYRIGHT)
-    if not cli_args.parse:
+    if not cli.parse_mode:
         cur_index = 0
         while cur_index < len(mp3_files):
             file = mp3_files[cur_index]
             # ask for information about each file, fill in the log, or return to prev iteration
             file_title = os.path.split(file)[-1]
 
-            tmp_log, need_returns = (dict(), False) if cli_args.delete else (dict(EasyID3(file)), False) \
-                if (scan_mode or cli_args.auto_rename) else ask_user(file, default, ignored, cli_args.copyright)
+            tmp_log, need_returns = (dict(), False) if cli.del_mode else (dict(EasyID3(file)), False) \
+                if (cli.scan_mode or cli.rename_mode) else ask_user(file, default, ignored, cli.leave_copy)
             cur_index += -1 if need_returns else 1
 
             logger.update_log(file_title, tmp_log)
@@ -222,8 +217,8 @@ def main():
         logger.parse_log()
 
     # edit the files
-    if not scan_mode:
-        edit_files(path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
+    if not cli.scan_mode:
+        edit_files(path, cli.del_mode, (cli.do_rename or cli.rename_mode))
 
     if cli.do_rename:
         logger.rename_logs_titles()
