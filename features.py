@@ -1,4 +1,5 @@
 import json
+import os
 
 import mutagen
 import pyperclip
@@ -71,11 +72,25 @@ def get_id3(file: str) -> EasyID3:
 
 def write_json(file_name: str, content: dict) -> None:
     """
-    Write 'file_name' to the file.json' content. If the file does not exist it will be created
+    Write content to the 'file_name.json'. If the file doesn't exist it will be created
 
     :param file_name: path to that file
     :param content: dict with the json-data
     :return: None
     """
-    with open(file_name, 'w', encoding='utf-8') as write_file:
+    with open(file_name, 'w+', encoding='utf-8') as write_file:
         json.dump(content, write_file, ensure_ascii=False)
+
+
+def read_json(file_name: str) -> dict:
+    """
+    Return the contents of 'file_name.json' as a dict. If the file doesn't exist an empty one will be created
+
+    :param file_name: path to that file
+    :return: dict with the content
+    """
+    if not os.path.exists(file_name):
+        write_json(file_name, {})
+
+    with open(file_name, 'r', encoding='utf-8') as read_file:
+        return json.load(read_file)
