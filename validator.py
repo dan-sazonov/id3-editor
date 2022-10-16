@@ -3,6 +3,7 @@ from datetime import date
 from mutagen.easyid3 import EasyID3
 
 import config
+from unidecode import unidecode
 
 
 def remove_brackets(s: str) -> str:
@@ -25,6 +26,7 @@ def validate_for_url(data: tuple) -> list:
     """
     arr = list(data)
     for s in range(len(arr)):
+        arr[s] = unidecode(arr[s])
         arr[s] = arr[s].replace(' ', '-')
         arr[s] = ''.join(i if i.isalnum() or i == '-' else '' for i in arr[s])
     return arr
