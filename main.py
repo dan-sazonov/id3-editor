@@ -3,6 +3,7 @@ import sys
 
 from mutagen.easyid3 import EasyID3
 
+import cli
 import config
 import features
 import logger
@@ -191,13 +192,11 @@ def main():
     :return: None
     """
     # get the CLI arguments
-    cli_parser = config.set_parser()
-    cli_args = cli_parser.parse_args(sys.argv[1:])
+    cli_args = cli.cli_args
     scan_mode = cli_args.scan
     log = logger.parse_log() if cli_args.parse else dict()
 
     # set the local variables
-    renamed_files = False
     mp3_files, path = select_files()
     default, ignored = set_defaults(cli_args.title, cli_args.artist, cli_args.album, cli_args.number,
                                     cli_args.genre, cli_args.date)
@@ -215,11 +214,12 @@ def main():
             log[file_title], need_returns = (dict(), False) if cli_args.delete else (dict(EasyID3(file)), False) \
                 if (scan_mode or cli_args.auto_rename) else ask_user(file, default, ignored, cli_args.copyright)
             cur_index += -1 if need_returns else 1
-            # logger.create_logs(log, {})
+
+            logger.update_log(log, cli_args.rename)
 
     # edit the files
     if not scan_mode:
-        renamed_files = edit_files(log, path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
+        edit_files(log, path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
 
     # create log file
     # if (cli_args.log or scan_mode) and not cli_args.parse:
