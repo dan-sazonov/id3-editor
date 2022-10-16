@@ -1,5 +1,4 @@
 import os
-import sys
 
 from mutagen.easyid3 import EasyID3
 
@@ -212,6 +211,7 @@ def main():
             file = mp3_files[cur_index]
             # ask for information about each file, fill in the log, or return to prev iteration
             file_title = os.path.split(file)[-1]
+
             tmp_log, need_returns = (dict(), False) if cli_args.delete else (dict(EasyID3(file)), False) \
                 if (scan_mode or cli_args.auto_rename) else ask_user(file, default, ignored, cli_args.copyright)
             cur_index += -1 if need_returns else 1
@@ -225,16 +225,12 @@ def main():
     if cli.do_rename:
         logger.rename_logs_titles()
 
-    # create log file
-    # if (cli_args.log or scan_mode) and not cli_args.parse:
-    #     logger.create_logs(log, renamed_files)
-    #     print(log, renamed_files)
-
-    if not cli.leave_log:
-        logger.rm_log()
-
     print(f'{c.green}\nDone! Press [Enter] to exit')
     input()
+
+    if cli.leave_log or cli.scan_mode:
+        return
+    logger.rm_log()
 
 
 if __name__ == "__main__":
