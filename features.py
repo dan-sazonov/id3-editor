@@ -1,3 +1,5 @@
+import json
+
 import mutagen
 import pyperclip
 from mutagen.easyid3 import EasyID3
@@ -65,3 +67,15 @@ def get_id3(file: str) -> EasyID3:
         track.add_tags()
 
     return track
+
+
+def write_json(file_name: str, content: dict) -> None:
+    """
+    Write 'file_name' to the file.json' content. If the file does not exist it will be created
+
+    :param file_name: path to that file
+    :param content: dict with the json-data
+    :return: None
+    """
+    with open(file_name, 'w', encoding='utf-8') as write_file:
+        json.dump(content, write_file, ensure_ascii=False)
