@@ -8,28 +8,49 @@ np = os.path.normpath
 c = config.ColorMethods()
 
 
-def create_logs(log: dict, renamed: dict):
-    """
-    Create json file and save the log in it
+def _get_log_file():
+    # вытаскивает имя рабочего лога
+    log_path = np(config.LOG_PATH)
+    files = []
 
-    :param log: the data to be saved
-    :param renamed: dict like this: {'old_file_name.mp3': 'new_file_name.mp3'}
-    :return: None
-    """
+    if os.path.exists(log_path):
+        files = os.listdir(log_path)
+        files = [file for file in files if file.split('.')[-1] == 'json']
+        files = [np(os.path.join(log_path, file)) for file in files]
+        files = [file for file in files if os.path.isfile(file)]
+
+    return max(files, key=os.path.getctime)
+
+
+def create_log():
+    # создает лог
     file_name = datetime.today().isoformat('-').replace(':', '-').split('.')[0] + '.json'
     log_path = np(config.LOG_PATH)
     log_file_path = os.path.join(log_path, file_name)
+
     if not os.path.isdir(log_path):
         os.mkdir(log_path)
+    open(log_file_path, 'a').close()
+
+
+def update_log(log: dict, renamed: dict):
+    # закидывает текущий трек в лог
+    log_file = _get_log_file()
 
     if renamed:
+        # дергаем гет нью от
         # rename the files in the log
         log_tmp = {renamed[i]: log[i] for i in log}
         log = log_tmp
         del log_tmp
 
-    with open(log_file_path, 'w', encoding='utf-8') as write_file:
+    with open(log_file, 'w', encoding='utf-8') as write_file:
         json.dump(log, write_file, ensure_ascii=False)
+
+
+def rm_log():
+    # убивает рабочий лог
+    os.remove(_get_log_file())
 
 
 def parse_log():
@@ -40,16 +61,8 @@ def parse_log():
     """
 
     # find the later log file
-    log_path = np(config.LOG_PATH)
-    files = []
-
-    if os.path.exists(log_path):
-        files = os.listdir(log_path)
-        files = [file for file in files if file.split('.')[-1] == 'json']
-        files = [np(os.path.join(log_path, file)) for file in files]
-        files = [file for file in files if os.path.isfile(file)]
-
-    log_file = np('<default file not found>' if not files else max(files, key=os.path.getctime))
+    log_file = _get_log_file()
+    log_file = np('<default file not found>' if not log_file else log_file)
 
     # ask the path to the log file
     print(f'{c.bright}Enter the absolute or relative path to the log file {c.reset}{c.dim} ({log_file}): ', end='')
