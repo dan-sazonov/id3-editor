@@ -47,8 +47,8 @@ parameter will be asked once at start, and will be applied to all tracks. It loo
 
 <h3>Logging and manual mode</h3>
 
-If you want you can get a json log with the metadata of the edited files. To do this, run the program with the `-l` or `--log` flag. By the path that is stored in the
-`LOG_PATH` variable in the file `config.py`, a file of the following format will be created:
+The log will be saved if the program was terminated with an error. You can also save a json log with the metadata of the edited files. To do this, run the program with flags
+`-l` or `--log'. By the path stored in the `LOG_PATH` variable in the file `config.py `, a file of the following format will be created:
 ```json
 {
   "file-name.mp3": {
@@ -66,14 +66,14 @@ create a json file with the unchanged metadata, then you edit them and apply it 
 
 - If the file contains information about the copyright holder and you want to leave it, use the `-c` or `--copyright` flag.
 - You can run the program in minimal mode with `-m` or `--minimal` flag. It will only ask for title, artist, album and genre. Other data will be cleared.
-- Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag. Please note that the information in the logs will be associated with the new name.
+- Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag. Keep in mind that the information in the logs will be associated with the new name at the regular end of the program.
 - You can also rename all files without changing the metadata. Run the program with the `--auto_rename` flag. Don't use other flags with this.
 - If there are several files with the same name, a number in parentheses will be added to the end of it
 - To remove all data from the tracks, run the program with the `-d` or `--delete` flag. Any other flags will be ignored.
 - If you need to go back to editing the previous track in the interactive mode, enter the `^` character in any field.
 - In interactive mode, two colons after the letters _a_, _o_ or _u_ will be replaced with this letter with an umlaut. For example, `Mo::tley Cru::e` will be replaced by `Mötley Crüe`.
 - To avoid bugs, the data entered by the user will be validated. To disable it, set the `SKIP_VALIDATION` variable in `config.py` to `True`. Be careful using it!
-- By default, the track number and the release year will be deleted in the minimal mode. To leave them, set the `LEAVE_SOME_DATA` variable in `config.py` to `True`.
+- You can specify metadata that does not need to be cleaned in minimal mode. Add their keys to the `LEAVE_THIS_DATA` list in the file `config.py `.
 - To view the quick help, run the program with the `-h` or `--help` flag.
 
 ## 🤝 Contributing

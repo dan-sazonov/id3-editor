@@ -1,8 +1,8 @@
 import os
-import sys
 
 from mutagen.easyid3 import EasyID3
 
+import cli
 import config
 import features
 import logger
@@ -33,14 +33,13 @@ def select_files():
     return files, working_dir
 
 
-def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
+def ask_user(file: str, default: dict, ignore: set):
     """
     Ask the user for new metadata values
 
     :param file: the file to edit
     :param default: predefined metadata values
     :param ignore: other metadata values to leave unchanged
-    :param leave_copy: bool, True, if you need to leave copyright information
     :return: dict with pairs 'metadata': 'value'; bool var: True, if you need to return to the prev iteration
     """
     file = np(file)
@@ -89,7 +88,7 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
         edited_md[data] = [validator.validate_input(data, usr_input)] if usr_input else [tmp]
 
     # leave information about the copyright holder
-    if leave_copy:
+    if cli.leave_copy:
         for data in config.COPYRIGHT:
             if data in actual_data:
                 edited_md[data] = track[data][0]
@@ -97,19 +96,14 @@ def ask_user(file: str, default: dict, ignore: set, leave_copy: bool = False):
     return edited_md, False
 
 
-def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bool, date: bool):
+def set_defaults():
     """
     Ask the user for the values that need to be set for all files
 
-    :param title: True, if you need to leave the title
-    :param artist: True, if you need to leave the artist
-    :param album: True, if you need to leave the album
-    :param number: True, if you need to leave the number
-    :param genre: True, if you need to leave the genre
-    :param date: True, if you need to leave the date
     :return: default: dict with pairs 'metadata': 'predefined value';
              ignored: set with data that should be ignored in ask_user
     """
+    title, artist, album, number, genre, date = cli.default
     default = dict()
     ignored = set()
     args = {'title': title,
@@ -128,17 +122,14 @@ def set_defaults(title: bool, artist: bool, album: bool, number: bool, genre: bo
     return default, ignored
 
 
-def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
+def edit_files(path: str):
     """
     Set, edit or delete the metadata of the selected file and rename these files
 
-    :param files: information from user about the metadata of each file
     :param path: the directory where these files are located
-    :param clear_all: True, if you need to remove all the metadata
-    :param do_rename: True, if you need to rename files in the form of artist-track_title
     :return: None
     """
-    renamed = dict()
+    files = logger.get_last_log()
     for file in files:
         current_path = np(os.path.join(path, file))
         # valid the path
@@ -162,13 +153,13 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
 
         # delete ignored metadata
         for del_data in track:
-            if del_data not in actual_data or clear_all:
+            if del_data not in actual_data or cli.del_mode:
                 del track[del_data]
 
         # save metadata and rename file
         track.save()
-        if do_rename:
-            file_name_tmp = features.get_new_filename(track['artist'][0], track['title'][0])
+        if cli.do_rename or cli.rename_mode:
+            file_name_tmp = features.get_new_filename(track)
 
             try:
                 os.rename(current_path, np(f'{path}/{file_name_tmp}'))
@@ -176,12 +167,8 @@ def edit_files(files: dict, path: str, clear_all: bool, do_rename: bool):
                 number = 0
                 while os.path.exists(np(f'{path}/{file_name_tmp}')):
                     number += 1
-                    file_name_tmp = features.get_new_filename(track['artist'][0], track['title'][0], number)
+                    file_name_tmp = features.get_new_filename(track, number)
                 os.rename(current_path, np(f'{path}/{file_name_tmp}'))
-
-            renamed[file] = file_name_tmp
-
-    return renamed
 
 
 def main():
@@ -190,42 +177,45 @@ def main():
 
     :return: None
     """
-    # get the CLI arguments
-    cli_parser = config.set_parser()
-    cli_args = cli_parser.parse_args(sys.argv[1:])
-    scan_mode = cli_args.scan
-    log = logger.parse_log() if cli_args.parse else dict()
+    logger.create_log()
 
     # set the local variables
-    renamed_files = False
     mp3_files, path = select_files()
-    default, ignored = set_defaults(cli_args.title, cli_args.artist, cli_args.album, cli_args.number,
-                                    cli_args.genre, cli_args.date)
+    default, ignored = set_defaults()
 
-    if cli_args.minimal:
+    if cli.min_mode:
         ignored.update({'tracknumber', 'date'})
-    if cli_args.copyright:
+    if cli.leave_copy:
         ignored.update(config.COPYRIGHT)
-    if not cli_args.parse:
+    if not cli.parse_mode:
         cur_index = 0
         while cur_index < len(mp3_files):
             file = mp3_files[cur_index]
             # ask for information about each file, fill in the log, or return to prev iteration
             file_title = os.path.split(file)[-1]
-            log[file_title], need_returns = (dict(), False) if cli_args.delete else (dict(EasyID3(file)), False) \
-                if (scan_mode or cli_args.auto_rename) else ask_user(file, default, ignored, cli_args.copyright)
+
+            tmp_log, need_returns = (dict(), False) if cli.del_mode else (dict(EasyID3(file)), False) \
+                if (cli.scan_mode or cli.rename_mode) else ask_user(file, default, ignored)
             cur_index += -1 if need_returns else 1
 
-    # edit the files
-    if not scan_mode:
-        renamed_files = edit_files(log, path, cli_args.delete, (cli_args.rename or cli_args.auto_rename))
+            logger.update_log(file_title, tmp_log)
 
-    # create log file
-    if (cli_args.log or scan_mode) and not cli_args.parse:
-        logger.create_logs(log, renamed_files)
+    if cli.parse_mode:
+        logger.parse_log()
+
+    # edit the files
+    if not cli.scan_mode:
+        edit_files(path)
+
+    if cli.do_rename:
+        logger.rename_logs_titles()
 
     print(f'{c.green}\nDone! Press [Enter] to exit')
     input()
+
+    if cli.leave_log or cli.scan_mode or cli.parse_mode:
+        return
+    logger.rm_log()
 
 
 if __name__ == "__main__":

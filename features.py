@@ -1,3 +1,6 @@
+import json
+import os
+
 import mutagen
 import pyperclip
 from mutagen.easyid3 import EasyID3
@@ -5,15 +8,16 @@ from mutagen.easyid3 import EasyID3
 import validator
 
 
-def get_new_filename(artist: str, title: str, number=0) -> str:
+def get_new_filename(track: EasyID3, number=0) -> str:
     """
     Get new filename for the track. Remove all symbols, replace spaces with underscores
 
+    :param track: mutagen object, metadata of this track
     :param number: amount of the same files. if NOT 0 is got, this number will be added to the end of the filename
-    :param artist: artist of this track
-    :param title: title of this track
     :return: new filename looks like 'artist-file_name'
     """
+    artist = '' if 'artist' not in track.keys() else track['artist'][0]
+    title = '' if 'title' not in track.keys() else track['title'][0]
 
     tmp_data = []
     for data in [artist, title]:
@@ -64,3 +68,32 @@ def get_id3(file: str) -> EasyID3:
         track.add_tags()
 
     return track
+
+
+def write_json(file_name: str, content=None) -> None:
+    """
+    Write content to the 'file_name.json'. If the file doesn't exist it will be created
+
+    :param file_name: path to that file
+    :param content: dict with the json-data
+    :return: None
+    """
+    if content is None:
+        content = {}
+
+    with open(file_name, 'w+', encoding='utf-8') as write_file:
+        json.dump(content, write_file, ensure_ascii=False)
+
+
+def read_json(file_name: str) -> dict:
+    """
+    Return the contents of 'file_name.json' as a dict. If the file doesn't exist an empty one will be created
+
+    :param file_name: path to that file
+    :return: dict with the content
+    """
+    if not os.path.exists(file_name):
+        write_json(file_name)
+
+    with open(file_name, 'r', encoding='utf-8') as read_file:
+        return json.load(read_file)
