@@ -8,8 +8,12 @@ np = os.path.normpath
 c = config.ColorMethods()
 
 
-def _get_log_file():
-    # вытаскивает имя рабочего лога
+def _get_log_file() -> str:
+    """
+    Searches for the last log file in the default directory
+
+    :return: title of the file with path
+    """
     log_path = np(config.LOG_PATH)
     files = []
 
@@ -22,12 +26,21 @@ def _get_log_file():
     return '' if not files else max(files, key=os.path.getctime)
 
 
-def get_last_log():
+def get_last_log() -> dict:
+    """
+    Returns the contents of the last log
+
+    :return: dict from json
+    """
     return features.read_json(_get_log_file())
 
 
-def create_log():
-    # создает лог
+def create_log() -> None:
+    """
+    Creates an empty log file and the necessary directory, if it is missing
+
+    :return: None
+    """
     file_name = datetime.today().isoformat('-').replace(':', '-').split('.')[0] + '.json'
     log_path = np(config.LOG_PATH)
     log_file_path = os.path.join(log_path, file_name)
@@ -37,7 +50,14 @@ def create_log():
     features.write_json(log_file_path)
 
 
-def update_log(file, log: dict):
+def update_log(file: str, log: dict) -> None:
+    """
+    Add the 'log' dict for the 'file' track to the current log
+
+    :param file: title of this track
+    :param log: metadata
+    :return: None
+    """
     log_file = _get_log_file()
     cur_log = features.read_json(log_file)
 
@@ -45,7 +65,12 @@ def update_log(file, log: dict):
     features.write_json(log_file, cur_log)
 
 
-def rename_logs_titles():
+def rename_logs_titles() -> None:
+    """
+    Rename the track names in the log according to the format
+
+    :return: None
+    """
     log_file = _get_log_file()
     cur_log = features.read_json(log_file)
     new_log = dict()
@@ -63,8 +88,12 @@ def rename_logs_titles():
     features.write_json(log_file, new_log)
 
 
-def rm_log():
-    # убивает рабочий лог
+def rm_log() -> None:
+    """
+    Remove current log file
+
+    :return: None
+    """
     path = _get_log_file()
     if not path:
         return

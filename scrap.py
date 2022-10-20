@@ -7,7 +7,13 @@ from deep_translator import GoogleTranslator
 from validator import validate_for_url
 
 
-def _has_cyrillic(text):
+def _has_cyrillic(text: str) -> bool:
+    """
+    Checking for Cyrillic characters in a string
+
+    :param text: the string being checked
+    :return: True, if has Cyrillic
+    """
     return bool(re.search('[\u0400-\u04FF]', text))
 
 

@@ -4,8 +4,8 @@ import colorama
 
 VERSION = {
     'major': 1,
-    'minor': 5,
-    'micro': 1
+    'minor': 6,
+    'micro': 0
 }
 
 AUTHOR = 'Dan Sazonov'
@@ -36,8 +36,8 @@ LOG_PATH = './logs/'
 COPYRIGHT = {'copyright', 'encodedby', 'organization', 'website'}
 
 # if True, the data from the LEAVE_THIS_DATA will remain unchanged
-LEAVE_SOME_DATA = False
-LEAVE_THIS_DATA = ['tracknumber', 'date']  # don't change it! (v 1.5.1: but why???)
+LEAVE_SOME_DATA = True
+LEAVE_THIS_DATA = ['tracknumber', 'date']
 
 # if True, the data entered by user won't be validated
 SKIP_VALIDATION = False
