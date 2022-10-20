@@ -129,7 +129,6 @@ def edit_files(path: str):
     :param path: the directory where these files are located
     :return: None
     """
-    renamed = dict()
     files = logger.get_last_log()
     for file in files:
         current_path = np(os.path.join(path, file))
@@ -170,10 +169,6 @@ def edit_files(path: str):
                     number += 1
                     file_name_tmp = features.get_new_filename(track, number)
                 os.rename(current_path, np(f'{path}/{file_name_tmp}'))
-
-            renamed[file] = file_name_tmp
-
-    return renamed
 
 
 def main():
