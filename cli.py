@@ -26,6 +26,8 @@ def set_parser():
                         help='delete all metadata from these tracks')
     parser.add_argument('-s', '--scan', action='store_true', default=False,
                         help='create the log file with the current values of the metadata')
+    parser.add_argument('--min_scan', action='store_true', default=False,
+                        help='create the log file and print out "artist-title" pairs for all tracks')
     parser.add_argument('-r', '--rename', action='store_true', default=False,
                         help='rename the files in the form of artist_track')
     parser.add_argument('--auto_rename', action='store_true', default=False,
@@ -56,6 +58,7 @@ leave_copy = cli_args.copyright
 del_mode = cli_args.delete
 parse_mode = cli_args.parse
 scan_mode = cli_args.scan
+min_scan = cli_args.min_scan
 min_mode = cli_args.minimal
 rename_mode = cli_args.auto_rename
 
