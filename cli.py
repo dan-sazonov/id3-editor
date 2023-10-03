@@ -27,7 +27,7 @@ def set_parser():
     parser.add_argument('-s', '--scan', action='store_true', default=False,
                         help='create the log file with the current values of the metadata')
     parser.add_argument('--min_scan', action='store_true', default=False,
-                        help='create the log file and print out "artist-title" pairs for all tracks')
+                        help='print out "artist-title" pairs for all tracks')
     parser.add_argument('-r', '--rename', action='store_true', default=False,
                         help='rename the files in the form of artist_track')
     parser.add_argument('--auto_rename', action='store_true', default=False,
