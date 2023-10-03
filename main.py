@@ -200,7 +200,7 @@ def main():
 
             logger.update_log(file_title, tmp_log)
             if cli.min_scan:
-                print(features.get_track_title(tmp_log))
+                print(features.get_title_pairs(tmp_log))
 
     if cli.parse_mode:
         logger.parse_log()
