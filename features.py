@@ -42,6 +42,17 @@ def get_track_title(track: EasyID3) -> list[str, str]:
     return clip
 
 
+def get_title_pairs(track: EasyID3) -> str:
+    """
+    Get nice string from the data of file
+
+    :param track: mutagen object, metadata of this track
+    :return: "artist - title"
+    """
+    track_title = get_track_title(track)
+    return f'{track_title[0]} - {track_title[1]}'
+
+
 def copy_track_title(track: EasyID3) -> None:
     """
     Save artist and title of this track to the clipboard

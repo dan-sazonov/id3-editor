@@ -195,10 +195,12 @@ def main():
             file_title = os.path.split(file)[-1]
 
             tmp_log, need_returns = (dict(), False) if cli.del_mode else (dict(EasyID3(file)), False) \
-                if (cli.scan_mode or cli.rename_mode) else ask_user(file, default, ignored)
+                if (cli.scan_mode or cli.rename_mode or cli.min_scan) else ask_user(file, default, ignored)
             cur_index += -1 if need_returns else 1
 
             logger.update_log(file_title, tmp_log)
+            if cli.min_scan:
+                print(features.get_title_pairs(tmp_log))
 
     if cli.parse_mode:
         logger.parse_log()

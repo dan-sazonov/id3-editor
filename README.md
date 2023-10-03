@@ -25,14 +25,14 @@ $ python3 main.py
 After that, the program will ask for the path to the directory where the tracks need to be edited. Then change the value of each parameter
 for each file. If you want to apply the value from the brackets, press \[Enter\]. You can use a parser to search for the album name. Just enter \[\!] instead of the album name. Also, the name of the band and track are copied to the clipboard. It looks like this:
 
-<p align="center"><img src="./img/demo1.png" width="555" height="253"></p>
+<p align="center"><img src="./img/demo1.png" width="555" height="253" alt="Main process screenshot"></p>
 
 <h3>Default Parameters</h3>
 
 If there is a same values for each tracks in this folder, you can predefine it by specifying one of the flags when starting the program (see below). The value of this
 parameter will be asked once at start, and will be applied to all tracks. It looks like this:
 
-<p align="center"><img src="./img/demo2.png" width="556" height="373"></p>
+<p align="center"><img src="./img/demo2.png" width="556" height="373" alt="Usage with the presets of some data screenshot"></p>
 <details> 
   <summary><b>Flags:</b></summary>
   <ul>
@@ -56,15 +56,17 @@ The log will be saved if the program was terminated with an error. You can also 
   }
 }
  ```
-You can restore metadata based on information from any log file. For example, this may be useful if you have the same files in different directories and you need to edit 
-them all. Run the program with the `-p` or `--parse` flag, set the log file and enter the path to the required directory. Any others flags except `-r` or `--rename` will be ignored.  
+You can restore metadata based on information from any log file. For example, this may be useful if you have the same files in different directories, and you need to edit 
+them all. Run the program with the `-p` or `--parse` flag, set the log file and enter the path to the required directory. Any other flags except `-r` or `--rename` will be ignored.  
   
-Also you can write the current unchanged metadata to a json file. To do this, run the program with the `-s` or `--scan` flag. I call this **manual mode** - at first you
+Also, you can write the current unchanged metadata to a json file. To do this, run the program with the `-s` or `--scan` flag. I call this **manual mode** - at first you
 create a json file with the unchanged metadata, then you edit them and apply it by running the program with the `-p` or `--parse` flag.
+
+If you need to print artist-title pairs for all tracks, use the `--min_scan` flag.
 
 <h3>More Features</h3>
 
-- If the file contains information about the copyright holder and you want to leave it, use the `-c` or `--copyright` flag.
+- If the file contains information about the copyright holder, and you want to leave it, use the `-c` or `--copyright` flag.
 - You can run the program in minimal mode with `-m` or `--minimal` flag. It will only ask for title, artist, album and genre. Other data will be cleared.
 - Files could be renamed in the form of `artist_track-title.mp3`. Use the `-r` or `--rename` flag. Keep in mind that the information in the logs will be associated with the new name at the regular end of the program.
 - You can also rename all files without changing the metadata. Run the program with the `--auto_rename` flag. Don't use other flags with this.
