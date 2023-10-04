@@ -204,7 +204,7 @@ def main():
                 _all_log.append(tmp_log)
 
     if cli.min_scan:
-        out = features.get_title_pairs(_all_log)
+        out = features.get_title_pairs(_all_log, True)
         print(out)
 
     if cli.parse_mode:

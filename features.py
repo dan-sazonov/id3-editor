@@ -42,11 +42,12 @@ def get_track_title(track: EasyID3) -> list[str, str]:
     return clip
 
 
-def get_title_pairs(all_log: list) -> str:
+def get_title_pairs(all_log: list, do_copy=False) -> str:
     # todo ебись как хочешь но разнеси
     """
     Get nice string from the data of file
 
+    :param do_copy:
     :param all_log: mutagen object, metadata of this track (ДА НИХУЯ)
     :return: "artist - title"
     """
@@ -55,7 +56,8 @@ def get_title_pairs(all_log: list) -> str:
         track_title = get_track_title(track)
         out += f'{track_title[0]} - {track_title[1]}\n'
 
-    pyperclip.copy(out)
+    if do_copy:
+        pyperclip.copy(out)
     return out
 
 
