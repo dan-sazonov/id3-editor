@@ -42,15 +42,21 @@ def get_track_title(track: EasyID3) -> list[str, str]:
     return clip
 
 
-def get_title_pairs(track: EasyID3) -> str:
+def get_title_pairs(all_log: list) -> str:
+    # todo ебись как хочешь но разнеси
     """
     Get nice string from the data of file
 
-    :param track: mutagen object, metadata of this track
+    :param all_log: mutagen object, metadata of this track (ДА НИХУЯ)
     :return: "artist - title"
     """
-    track_title = get_track_title(track)
-    return f'{track_title[0]} - {track_title[1]}'
+    out = ''
+    for track in all_log:
+        track_title = get_track_title(track)
+        out += f'{track_title[0]} - {track_title[1]}\n'
+
+    pyperclip.copy(out)
+    return out
 
 
 def copy_track_title(track: EasyID3) -> None:
@@ -108,3 +114,15 @@ def read_json(file_name: str) -> dict:
 
     with open(file_name, 'r', encoding='utf-8') as read_file:
         return json.load(read_file)
+
+# def get_min_log(track: EasyID3, do_copy=False) -> str:
+#     """
+#     Get nice string from the data of file
+#
+#     :param track: mutagen object, metadata of this track
+#     :return: "artist - title"
+#     """
+#
+#     out = get_title_pairs(tmp_log)
+#     pyperclip.copy(out)
+#     return out
