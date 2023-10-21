@@ -42,7 +42,7 @@ def get_track_title(track: EasyID3) -> list[str, str]:
     return clip
 
 
-def get_title_pairs(all_log: list, do_copy=False) -> str:
+def get_title_pairs(all_log: list, do_copy: bool) -> str:
     # todo ебись как хочешь но разнеси
     """
     Get nice string from the data of file

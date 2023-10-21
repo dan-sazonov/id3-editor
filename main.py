@@ -205,7 +205,7 @@ def main():
 
     if cli.min_scan:
         # todo вынести отдельно
-        out = features.get_title_pairs(_all_log, True)
+        out = features.get_title_pairs(_all_log, config.DO_OUTPUT_COPY)
         print(out)
 
     if cli.parse_mode:
