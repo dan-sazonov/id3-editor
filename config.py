@@ -5,7 +5,7 @@ import colorama
 VERSION = {
     'major': 1,
     'minor': 6,
-    'micro': 1
+    'micro': 2
 }
 
 AUTHOR = 'Dan Sazonov'
