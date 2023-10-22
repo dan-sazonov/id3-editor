@@ -6,6 +6,8 @@
 
 **The simplest console tool for batch editing of mp3 metadata in interactive or manual mode**
 
+> Now this version of the project is in the active stage of refactoring. A roadmap of planned changes will be added later. If you want to contribute to the project already at this stage, please contact the author.
+
 ## 📦 Installation
 Clone this repo, change the directory and install the necessary requirements:
 ```
@@ -62,7 +64,7 @@ them all. Run the program with the `-p` or `--parse` flag, set the log file and 
 Also, you can write the current unchanged metadata to a json file. To do this, run the program with the `-s` or `--scan` flag. I call this **manual mode** - at first you
 create a json file with the unchanged metadata, then you edit them and apply it by running the program with the `-p` or `--parse` flag.
 
-If you need to print artist-title pairs for all tracks, use the `--min_scan` flag.
+If you need to print artist-title pairs for all tracks, use the `--min_scan` flag. The output information will be copied to the clipboard. The `DO_OUTPUT_COPY` flag in the file `config.py` is responsible for this behavior.
 
 <h3>More Features</h3>
 
