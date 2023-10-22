@@ -6,6 +6,8 @@
 
 **The simplest console tool for batch editing of mp3 metadata in interactive or manual mode**
 
+> Now this version of the project is in the active stage of refactoring. A roadmap of planned changes will be added later. If you want to contribute to the project already at this stage, please contact the author.
+
 ## 📦 Installation
 Clone this repo, change the directory and install the necessary requirements:
 ```
