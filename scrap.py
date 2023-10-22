@@ -12,7 +12,7 @@ def _has_cyrillic(text: str) -> bool:
     Checking for Cyrillic characters in a string
 
     :param text: the string being checked
-    :return: True, if has Cyrillic
+    :return: True, if it has Cyrillic
     """
     return bool(re.search('[\u0400-\u04FF]', text))
 
@@ -33,7 +33,7 @@ def get_album_title(artist, track):
     Parse genius.com and return album title. 'Artist' and 'track' will be validated and translated to English
 
     :param artist: name of the artist
-    :param track: track title
+    :param track: title of the track
     :return: title of the album
     """
     data = validate_for_url((_translate(artist), _translate(track)))

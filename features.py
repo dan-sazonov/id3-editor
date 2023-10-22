@@ -43,12 +43,11 @@ def get_track_title(track: EasyID3) -> list[str, str]:
 
 
 def get_title_pairs(all_log: list, do_copy: bool) -> str:
-    # todo ебись как хочешь но разнеси
     """
     Get nice string from the data of file
 
-    :param do_copy:
-    :param all_log: mutagen object, metadata of this track (ДА НИХУЯ)
+    :param all_log: list of mutagen object, metadata of this track
+    :param do_copy: output will be added to the clipboard, if this True
     :return: "artist - title"
     """
     out = ''

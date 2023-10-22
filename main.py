@@ -178,7 +178,7 @@ def main():
     :return: None
     """
     logger.create_log()
-    _all_log = []  # todo optimize
+    _all_log = []
 
     # set the local variables
     mp3_files, path = select_files()
@@ -204,7 +204,6 @@ def main():
                 _all_log.append(tmp_log)
 
     if cli.min_scan:
-        # todo вынести отдельно
         out = features.get_title_pairs(_all_log, config.DO_OUTPUT_COPY)
         print(out)
 
